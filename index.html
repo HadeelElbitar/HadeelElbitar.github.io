@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hadeel Elbitar</title>
+<meta name="description" content="Hadeel Elbitar, Senior Staff Software Engineer. Identity, authentication and platform products at Cash App, Lyft and Microsoft, and founder of Readoactive.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
+<meta property="og:title" content="Hadeel Elbitar · Senior Staff Software Engineer">
+<meta property="og:description" content="Identity, authentication and platform products at Cash App, Lyft and Microsoft. Try them live.">
+<meta property="og:url" content="https://hadeelelbitar.github.io/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5f0; --surface: #ffffff; --well: #efece4; --ink: #1b1a17; --muted: #5f5b52; --faint: #8d887c;
+    --line: #e3dfd4; --accent: #0f6b5c; --accent-soft: #e1efe9; --ok: #1f7a46; --bad: #b3261e;
+    --serif: "Fraunces", Georgia, serif; --sans: "Inter", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12130f; --surface: #1a1b17; --well: #22231e; --ink: #ecebe5; --muted: #a9a698; --faint: #7a776b;
+      --line: #2c2d27; --accent: #5cc6ab; --accent-soft: #1c2d27; --ok: #5cc68a; --bad: #f2867c;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12130f; --surface: #1a1b17; --well: #22231e; --ink: #ecebe5; --muted: #a9a698; --faint: #7a776b;
+    --line: #2c2d27; --accent: #5cc6ab; --accent-soft: #1c2d27; --ok: #5cc68a; --bad: #f2867c;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  header.nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  header.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .mark { font-family: var(--serif); font-weight: 600; font-size: 19px; text-decoration: none; }
+  nav ul { list-style: none; display: flex; gap: 26px; margin: 0; padding: 0; font-size: 14px; }
+  nav a { text-decoration: none; color: var(--muted); }
+  nav a:hover { color: var(--ink); }
+
+  /* hero */
+  .hero { padding: 76px 0 40px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
+  .eyebrow { font-family: var(--mono); font-size: 13px; letter-spacing: .04em; color: var(--accent); margin: 0 0 18px; }
+  .hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(38px, 5.4vw, 60px); line-height: 1.08; letter-spacing: -0.02em; margin: 0 0 22px; }
+  .hero h1 em { color: var(--accent); }
+  .lede { font-size: 18px; color: var(--muted); max-width: 54ch; margin: 0 0 30px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 9px; font-size: 15px; font-weight: 500; text-decoration: none; border: 1px solid var(--line); background: var(--surface); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn:hover { border-color: var(--ink); }
+
+  .tiles { display: grid; gap: 10px; }
+  .tile { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 14px 16px; display: flex; gap: 14px; align-items: center; transition: transform .15s, border-color .15s; }
+  .tile:hover { transform: translateX(4px); border-color: var(--ink); }
+  .tile .badge { width: 42px; height: 42px; flex: none; }
+  .tile b { display: block; font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .tile .sub { font-size: 13px; color: var(--faint); }
+  .tile .go { margin-left: auto; color: var(--faint); font-size: 18px; }
+  .badge { border-radius: 11px; display: grid; place-items: center; font-weight: 700; font-size: 15px; color: #fff; overflow: hidden; }
+  .badge img, .badge > span { width: 100%; height: 100%; display: grid; place-items: center; }
+  .badge > span { color: #fff; }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 40px 0 0; }
+  .stat { padding: 22px 20px; border-left: 1px solid var(--line); }
+  .stat:first-child { border-left: 0; padding-left: 0; }
+  .stat b { display: block; font-family: var(--serif); font-weight: 400; font-size: 32px; line-height: 1.1; }
+  .stat span { font-size: 13px; color: var(--muted); }
+
+  section { padding: 80px 0 40px; scroll-margin-top: 60px; }
+  .sec-label { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); margin: 0 0 10px; }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4vw, 40px); letter-spacing: -0.01em; margin: 0 0 10px; line-height: 1.15; }
+  .sec-intro { color: var(--muted); margin: 0 0 32px; max-width: 64ch; }
+
+  /* showcase */
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 14px; scrollbar-width: thin; }
+  .chip { flex: none; display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 14px; font-weight: 500; white-space: nowrap; }
+  .chip .badge { width: 28px; height: 28px; border-radius: 50%; font-size: 11px; }
+  .chip[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .showcase { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: var(--surface); margin-top: 6px; }
+  .stage { --brand: #333; position: relative; min-height: 720px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 36px 20px 60px; overflow: hidden;
+    background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--brand) 28%, var(--well)) 0%, var(--well) 70%); transition: background .4s; }
+  #device { display: flex; justify-content: center; transform-origin: top center; }
+  .stage-foot { position: absolute; left: 0; right: 0; bottom: 16px; display: flex; justify-content: center; gap: 10px; }
+  .stage-foot button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 13px; font-size: 12px; color: var(--muted); }
+  .thumbs { display: flex; gap: 10px; margin-top: 22px; }
+  .thumbs[hidden] { display: none; }
+  .thumbs button { width: 58px; height: 112px; border-radius: 12px; padding: 0; border: 2px solid transparent; overflow: hidden; background: #000; opacity: .6; transition: opacity .2s, transform .2s; position: relative; }
+  .thumbs button img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .thumbs button span { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 20px; background: rgba(0,0,0,.35); }
+  .thumbs button[aria-pressed="true"] { opacity: 1; border-color: var(--brand); transform: translateY(-3px); }
+  .detail { padding: 34px 34px 30px; border-left: 1px solid var(--line); display: flex; flex-direction: column; }
+  .detail .meta { font-family: var(--mono); font-size: 12px; color: var(--faint); margin-bottom: 6px; }
+  .detail h3 { font-family: var(--serif); font-weight: 600; font-size: 28px; margin: 0 0 4px; line-height: 1.15; }
+  .detail .role { color: var(--accent); font-weight: 500; font-size: 14px; margin: 0 0 14px; }
+  .detail p.sum { color: var(--muted); margin: 0 0 18px; }
+  .impact { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .impact span { font-size: 13px; padding: 5px 10px; border-radius: 8px; background: var(--accent-soft); }
+  .impact b { font-weight: 600; }
+  .hood h4 { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--faint); margin: 0 0 10px; font-weight: 500; }
+  .steps { list-style: none; margin: 0 0 16px; padding: 0; counter-reset: s; }
+  .steps li { counter-increment: s; position: relative; padding: 9px 12px 9px 44px; border-radius: 10px; color: var(--muted); font-size: 14px; line-height: 1.45; transition: background .25s, color .25s; }
+  .steps li::before { content: counter(s); position: absolute; left: 10px; top: 8px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 500 12px var(--mono); border: 1px solid var(--line); background: var(--surface); }
+  .steps li.done { color: var(--ink); }
+  .steps li.done::before { content: "✓"; background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+  .steps li.on { background: var(--accent-soft); color: var(--ink); }
+  .steps li.on::before { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .note { font: 12.5px/1.65 var(--mono); background: var(--well); border-radius: 10px; padding: 12px 14px; color: var(--muted); overflow-wrap: anywhere; }
+  .note:empty { display: none; }
+  .note b { color: var(--ink); font-weight: 500; }
+  .note .k { color: var(--accent); }
+  .note button { font: 500 12px var(--sans); border: 1px solid var(--line); background: var(--surface); border-radius: 7px; padding: 5px 10px; margin: 8px 6px 0 0; }
+  .note button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .note .yes { color: var(--ok); font-weight: 500; } .note .no { color: var(--bad); font-weight: 500; }
+  .detail .more { margin-top: auto; padding-top: 20px; display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; }
+  .detail .more a { color: var(--accent); font-weight: 500; text-decoration: none; }
+  .disclaimer { font-size: 12px; color: var(--faint); margin: 12px 4px 0; }
+
+  /* devices */
+  .phone { width: 300px; height: 630px; border-radius: 48px; padding: 11px; background: #0d0d0d; box-shadow: 0 30px 60px -20px rgba(0,0,0,.45), inset 0 0 0 2px #2a2a2a; position: relative; flex: none; }
+  .phone::after { content: ""; position: absolute; top: 21px; left: 50%; transform: translateX(-50%); width: 86px; height: 25px; border-radius: 20px; background: #0d0d0d; z-index: 9; }
+  .screen { width: 100%; height: 100%; border-radius: 38px; overflow: hidden; position: relative; background: #fff; color: #000; font-family: "Helvetica Neue", Inter, system-ui, sans-serif; letter-spacing: -0.01em; }
+  .screen img.still, .screen video { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .status { position: absolute; top: 0; left: 0; right: 0; height: 46px; display: flex; justify-content: space-between; align-items: center; padding: 6px 26px 0 30px; font: 600 14px -apple-system, Inter, sans-serif; z-index: 8; pointer-events: none; }
+  .status i { font-style: normal; font-size: 11px; letter-spacing: 1px; }
+  .win { width: 580px; height: 470px; flex: none; border-radius: 10px; overflow: hidden; background: #fff; color: #1b1b1b; box-shadow: 0 30px 60px -24px rgba(0,0,0,.4), 0 0 0 1px rgba(0,0,0,.1); display: flex; flex-direction: column; font-family: "Segoe UI", "Selawik", Inter, system-ui, sans-serif; letter-spacing: 0; }
+  .bar { height: 38px; flex: none; background: #e8e8e8; display: flex; align-items: center; gap: 7px; padding: 0 12px; }
+  .bar i { width: 11px; height: 11px; border-radius: 50%; background: #cfcdc8; display: inline-block; }
+  .url { flex: 1; margin-left: 8px; background: #fff; border-radius: 7px; height: 24px; font: 12px/24px -apple-system, Inter, sans-serif; color: #555; padding: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .url::before { content: "🔒 "; font-size: 10px; }
+  .page { flex: 1; position: relative; overflow: hidden; }
+  .fade { animation: fade .35s ease both; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .tap { animation: tap 1.6s ease-in-out infinite; }
+  @keyframes tap { 0%,100% { box-shadow: 0 0 0 0 rgba(128,128,128,0); } 50% { box-shadow: 0 0 0 6px rgba(128,128,128,.28); } }
+  @keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes drop { from { transform: translateY(-90px); } to { transform: none; } }
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  /* ---- Cash App look ---- */
+  .ca { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 58px 22px 26px; }
+  .ca-logo { width: 36px; height: 36px; border-radius: 9px; background: #00d64f; color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 22px; }
+  .ca h5 { font-weight: 500; font-size: 27px; line-height: 1.12; letter-spacing: -0.035em; margin: 18px 0 18px; }
+  .pill { border: 0; border-radius: 999px; padding: 15px; font-size: 16px; font-weight: 500; width: 100%; }
+  .seg2 { display: grid; grid-template-columns: 1fr 1fr; background: #1c1c1c; border-radius: 999px; padding: 3px; margin-bottom: 18px; font-size: 14px; font-weight: 500; text-align: center; }
+  .seg2 span { padding: 9px; border-radius: 999px; color: #a2a3a3; }
+  .seg2 span.on { background: #000; color: #fff; box-shadow: 0 0 0 1px #2b2b2b; }
+  .ca-in { display: flex; align-items: center; gap: 10px; border: 1px solid #3a3a3a; border-radius: 10px; padding: 14px; font-size: 16px; margin-bottom: 8px; }
+  .ca-in .cc { color: #fff; font-size: 14px; padding-right: 10px; border-right: 1px solid #3a3a3a; white-space: nowrap; }
+  .ca-in .ph { color: #fff; }
+  .ca-in .ph:empty::before { content: "Enter phone number"; color: #6c6c6c; }
+  .ca-in.bad { border-color: #ff5b4d; }
+  .ca-err { color: #ff7a6e; font-size: 13px; line-height: 1.4; margin: 2px 0 10px; animation: fade .3s both; }
+  .or { text-align: center; color: #6c6c6c; font-size: 13px; margin: 14px 0; }
+  .fine { font-size: 11px; color: #8a8a8a; line-height: 1.45; margin-top: 16px; }
+  .fine u { color: #fff; }
+  .otp { display: flex; gap: 8px; margin: 4px 0 18px; }
+  .otp span { flex: 1; height: 54px; border-bottom: 2px solid #3a3a3a; display: grid; place-items: center; font-size: 26px; font-weight: 500; }
+  .otp span.f { border-color: #00d64f; }
+  .banner { position: absolute; top: 50px; left: 10px; right: 10px; z-index: 7; background: rgba(245,245,245,.92); backdrop-filter: blur(10px); color: #000; border-radius: 22px; padding: 12px 14px; display: flex; gap: 10px; font: 13px/1.35 -apple-system, Inter, sans-serif; text-align: left; border: 0; animation: drop .45s cubic-bezier(.2,.9,.3,1.2) both; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .banner .ic { width: 34px; height: 34px; border-radius: 9px; background: #34c759; display: grid; place-items: center; color: #fff; font-size: 17px; flex: none; }
+  .banner small { color: #666; float: right; }
+  .lav { background: #c3b5ff; color: #000; }
+  .tg { width: 50px; height: 30px; border-radius: 999px; background: #3a3a3a; position: relative; border: 0; flex: none; transition: background .2s; }
+  .tg::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; transition: transform .2s; }
+  .tg[aria-checked="true"] { background: #00d64f; }
+  .tg[aria-checked="true"]::after { transform: translateX(20px); }
+  .crow { display: flex; align-items: center; gap: 12px; padding: 13px 0; font-size: 15px; border-bottom: 1px solid #1f1f1f; width: 100%; background: none; border-left: 0; border-right: 0; border-top: 0; text-align: left; color: #fff; }
+  .crow .ico { width: 34px; height: 34px; border-radius: 50%; background: #1c1c1c; display: grid; place-items: center; font-size: 15px; flex: none; }
+  .crow .lbl { flex: 1; line-height: 1.25; }
+  .crow .lbl small { display: block; color: #8a8a8a; font-size: 12.5px; }
+  .crow .val { color: #8a8a8a; font-size: 14px; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; border-radius: 28px 28px 0 0; background: #111; padding: 22px 20px 28px; animation: up .3s ease both; color: #fff; z-index: 6; }
+  .lim { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 18px; }
+  .lim button { border: 1px solid #333; background: #000; color: #fff; border-radius: 12px; padding: 14px 0; font-size: 15px; font-weight: 500; }
+  .lim button.on { background: #00d64f; color: #000; border-color: #00d64f; }
+
+  /* ---- Microsoft look ---- */
+  .ms-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #e7eef6 0%, #f3f2f1 45%, #f1ebe4 100%); display: flex; align-items: flex-start; justify-content: center; padding-top: 26px; overflow: auto; }
+  .ms-card { width: 380px; max-width: 92%; background: #fff; padding: 26px 32px 24px; box-shadow: 0 2px 6px rgba(0,0,0,.2); font-size: 13.5px; color: #1b1b1b; animation: fade .3s both; }
+  .ms-logo { display: flex; align-items: center; gap: 8px; font-weight: 600; color: #737373; font-size: 18px; margin-bottom: 14px; letter-spacing: -.01em; }
+  .sq { display: grid; grid-template-columns: 9px 9px; gap: 1.5px; }
+  .sq i { width: 9px; height: 9px; display: block; }
+  .ms-card h6 { font-size: 22px; font-weight: 600; margin: 4px 0 12px; line-height: 1.2; }
+  .ms-in { border: 0; border-bottom: 1px solid #666; padding: 7px 0; font-size: 15px; margin: 6px 0 14px; width: 100%; color: #1b1b1b; }
+  .ms-link { color: #0067b8; }
+  .ms-btn { background: #0067b8; color: #fff; border: 0; padding: 7px 0; min-width: 108px; font-size: 15px; }
+  .ms-btn2 { background: #ccc; color: #1b1b1b; border: 0; padding: 7px 0; min-width: 108px; font-size: 15px; }
+  .perm { display: flex; gap: 10px; align-items: flex-start; padding: 5px 0; width: 100%; text-align: left; background: none; border: 0; font-size: 13.5px; color: #1b1b1b; }
+  .perm .chev { width: 14px; flex: none; transition: transform .2s; color: #444; margin-top: 1px; }
+  .perm.open .chev { transform: rotate(180deg); }
+  .perm small { display: block; color: #555; font-size: 12px; margin-top: 3px; line-height: 1.4; }
+  .ms-tiny { font-size: 11.5px; line-height: 1.45; color: #1b1b1b; margin: 10px 0 8px; }
+  .msbtn { display: inline-flex; align-items: center; gap: 12px; height: 41px; padding: 0 12px; border: 1px solid #8c8c8c; background: #fff; color: #5e5e5e; font: 600 15px "Segoe UI", Inter, sans-serif; }
+
+  /* ---- Power BI look ---- */
+  .pq { font: 11.5px "Segoe UI", Inter, sans-serif; color: #252423; display: flex; flex-direction: column; height: 100%; position: relative; }
+  .pq-title { height: 30px; background: #f3f2f1; display: flex; align-items: center; gap: 8px; padding: 0 0 0 10px; font-size: 12px; border-bottom: 1px solid #e1dfdd; }
+  .pq-title .pbi { width: 16px; height: 16px; border-radius: 2px; background: #f2c811; display: grid; place-items: end center; padding-bottom: 2px; }
+  .pq-title .pbi i { display: inline-block; width: 2px; background: #252423; margin: 0 .5px; }
+  .pq-title .wc { margin-left: auto; display: flex; }
+  .pq-title .wc span { width: 40px; text-align: center; color: #555; }
+  .pq-tabs { display: flex; gap: 2px; padding: 0 6px; background: #fff; font-size: 12px; }
+  .pq-tabs span { padding: 5px 10px; }
+  .pq-tabs .file { background: #f2c811; color: #252423; }
+  .pq-tabs .on { border-bottom: 2px solid #f2c811; font-weight: 600; }
+  .ribbon { display: flex; gap: 0; padding: 4px 4px 0; border-bottom: 1px solid #e1dfdd; background: #fff; overflow: hidden; }
+  .rg { display: flex; flex-direction: column; align-items: center; border-right: 1px solid #edebe9; padding: 0 4px; }
+  .rg .bs { display: flex; gap: 1px; flex: 1; }
+  .rg .lbl { font-size: 10px; color: #605e5c; padding: 2px 0 3px; }
+  .rb { display: flex; flex-direction: column; align-items: center; gap: 2px; border: 1px solid transparent; background: none; padding: 3px 4px; font-size: 10.5px; line-height: 1.15; text-align: center; min-width: 46px; border-radius: 2px; color: #252423; }
+  .rb .ri { font-size: 17px; height: 20px; }
+  .rb:hover { background: #f3f2f1; border-color: #e1dfdd; }
+  .rb:disabled { opacity: .4; cursor: default; }
+  .fx { display: flex; align-items: center; border-bottom: 1px solid #e1dfdd; height: 26px; font: 11px Consolas, var(--mono); }
+  .fx b { width: 54px; text-align: center; color: #605e5c; font: italic 600 12px "Segoe UI", sans-serif; border-right: 1px solid #e1dfdd; height: 100%; display: grid; place-items: center; }
+  .fx span { padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
+  .pq-main { display: flex; flex: 1; min-height: 0; }
+  .qpane { width: 92px; border-right: 1px solid #e1dfdd; background: #faf9f8; padding: 6px 0; }
+  .qpane .h { padding: 0 8px 4px; color: #605e5c; font-size: 11px; }
+  .qpane div.q { padding: 4px 8px; display: flex; gap: 5px; align-items: center; }
+  .qpane div.q.on { background: #e1dfdd; }
+  .tbl-ic { width: 12px; height: 10px; border: 1px solid #605e5c; background: repeating-linear-gradient(#605e5c 0 1px, transparent 1px 3px); flex: none; }
+  .grid { flex: 1; overflow: auto; }
+  .grid table { border-collapse: collapse; width: 100%; }
+  .grid th { background: #fff; font-weight: 600; text-align: left; padding: 5px 6px; border-bottom: 1px solid #c8c6c4; border-right: 1px solid #edebe9; white-space: nowrap; position: relative; }
+  .grid th .ty { color: #605e5c; font-weight: 400; font-size: 9.5px; margin-right: 4px; letter-spacing: -.3px; }
+  .grid th .dd { color: #8a8886; font-size: 9px; margin-left: 4px; }
+  .grid td { padding: 5px 6px; border-bottom: 1px solid #edebe9; border-right: 1px solid #edebe9; white-space: nowrap; }
+  .grid td.n { text-align: right; }
+  .grid td.rn { color: #8a8886; background: #faf9f8; text-align: right; width: 22px; }
+  .grid td.tab { color: #b38600; font-style: italic; }
+  .grid tr.fl td { animation: flash .9s ease; }
+  @keyframes flash { 0% { background: #fff4ce; } 100% { background: transparent; } }
+  .xp { border: 1px solid #c8c6c4; background: #fff; padding: 0 3px; font-size: 10px; margin-left: 4px; border-radius: 2px; }
+  .settings { width: 132px; border-left: 1px solid #e1dfdd; padding: 8px 9px; overflow: auto; }
+  .settings .sh { font-size: 12.5px; font-weight: 600; margin-bottom: 8px; }
+  .settings .cap { font-size: 10px; font-weight: 600; color: #605e5c; letter-spacing: .04em; margin: 8px 0 4px; }
+  .settings .nm { border: 1px solid #c8c6c4; padding: 2px 5px; margin-bottom: 3px; }
+  .stp { display: flex; justify-content: space-between; padding: 3px 5px; width: 100%; border: 0; background: none; font: inherit; text-align: left; color: inherit; }
+  .stp:hover { background: #f3f2f1; }
+  .stp.on { background: #e1dfdd; }
+  .stp em { font-style: normal; color: #8a8886; }
+  .pq-status { height: 22px; border-top: 1px solid #e1dfdd; display: flex; justify-content: space-between; align-items: center; padding: 0 8px; font-size: 10px; color: #605e5c; letter-spacing: .02em; }
+  .dlg-back { position: absolute; inset: 0; background: rgba(255,255,255,.55); display: grid; place-items: center; z-index: 5; }
+  .dlg { width: 400px; background: #fff; box-shadow: 0 6px 30px rgba(0,0,0,.25); padding: 16px 18px; font-size: 11.5px; animation: fade .25s both; }
+  .dlg h6 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+  .dlg .mini { border: 1px solid #e1dfdd; margin: 6px 0 10px; }
+  .dlg .mini table { width: 100%; border-collapse: collapse; }
+  .dlg .mini td, .dlg .mini th { padding: 2px 6px; text-align: left; border-bottom: 1px solid #f3f2f1; }
+  .dlg .mini .sel { background: #dbe9f6; }
+  .dlg .dd2 { border: 1px solid #8a8886; padding: 3px 6px; display: flex; justify-content: space-between; margin: 3px 0; }
+  .dlg .ok { color: #107c10; margin: 8px 0; }
+  .dlg .btns { display: flex; justify-content: flex-end; gap: 8px; }
+  .dlg .btns button { min-width: 70px; padding: 4px 0; border: 1px solid #8a8886; background: #fff; font-size: 12px; }
+  .dlg .btns .pri { background: #f2c811; border-color: #f2c811; font-weight: 600; }
+  .pop { position: absolute; top: 24px; left: 0; width: 170px; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,.2); padding: 8px; z-index: 4; font-weight: 400; animation: fade .2s both; text-align: left; }
+  .pop label { display: flex; gap: 5px; align-items: center; padding: 2px 0; }
+  .pop .btns { display: flex; justify-content: flex-end; gap: 6px; margin-top: 6px; }
+  .pop .btns button { border: 1px solid #8a8886; background: #fff; padding: 2px 12px; font-size: 11px; }
+  .pop .btns .pri { background: #f2c811; border-color: #f2c811; }
+
+  /* timeline */
+  .tl-bar { display: flex; gap: 4px; height: 56px; }
+  .seg { border: 0; border-radius: 10px; padding: 0 12px; text-align: left; color: #fff; font-size: 13px; font-weight: 600; line-height: 1.2; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; opacity: .55; transition: opacity .2s, transform .2s; }
+  .seg small { display: block; font-weight: 400; opacity: .85; font-size: 11px; }
+  .seg:hover, .seg[aria-selected="true"] { opacity: 1; }
+  .seg[aria-selected="true"] { transform: translateY(-3px); }
+  .years { display: flex; justify-content: space-between; font: 12px var(--mono); color: var(--faint); margin-top: 10px; }
+  .tl-card { margin-top: 22px; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 26px 28px; display: grid; grid-template-columns: 240px 1fr; gap: 28px; }
+  .tl-card .when { font-family: var(--mono); font-size: 13px; color: var(--faint); }
+  .tl-card .when strong { display: block; font-family: var(--serif); font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .tl-card ul { margin: 0 0 14px; padding-left: 18px; color: var(--muted); }
+  .tl-card li { margin-bottom: 6px; }
+  .tl-card .jump { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tl-card .jump button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500; }
+  .tl-card .jump button:hover { border-color: var(--ink); }
+
+  .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .sk { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--surface); }
+  .sk h4 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-family: var(--mono); font-size: 12px; padding: 3px 8px; border-radius: 5px; background: var(--accent-soft); }
+
+  .contact { background: var(--ink); color: var(--bg); border-radius: 20px; padding: 56px; margin: 80px 0 72px; }
+  .contact h2 { color: var(--bg); }
+  .contact p { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); max-width: 52ch; margin: 0 0 28px; }
+  .contact .btn { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 35%, var(--ink)); }
+  .contact .btn.primary { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 13px; color: var(--faint); }
+  footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+  @media (max-width: 960px) {
+    .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 56px; }
+    .showcase { grid-template-columns: 1fr; }
+    .detail { border-left: 0; border-top: 1px solid var(--line); padding: 26px 22px; }
+    .stage { min-height: 0; padding: 28px 12px 60px; }
+    .skills { grid-template-columns: repeat(2, 1fr); }
+    .tl-card { grid-template-columns: 1fr; gap: 12px; }
+  }
+  @media (max-width: 640px) {
+    nav ul { display: none; }
+    .wrap { padding: 0 16px; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat { padding: 18px 0; border-left: 0; border-top: 1px solid var(--line); }
+    .stat:nth-child(-n+2) { border-top: 0; }
+    .skills { grid-template-columns: 1fr; }
+    .tl-bar { height: auto; flex-direction: column; }
+    .seg { flex: none !important; height: 46px; }
+    .years { display: none; }
+    .contact { padding: 36px 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="mark" href="#top">Hadeel Elbitar</a>
+    <nav>
+      <ul>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#career">Career</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Senior Staff Software Engineer · Seattle, WA</p>
+        <h1>I build the moment you <em>sign in</em>, and everything it unlocks.</h1>
+        <p class="lede">
+          15+ years building identity, authentication and platform products at Cash App, Lyft and Microsoft,
+          and now my own AI product, Readoactive. Pick a product and click through it.
+        </p>
+        <div class="cta">
+          <a class="btn primary" href="#products">Try the products</a>
+          <a class="btn" href="mailto:dydy.hadoola@gmail.com">Get in touch</a>
+        </div>
+      </div>
+      <div class="tiles" id="tiles"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>15+</b><span>years in industry</span></div>
+      <div class="stat"><b>50M+</b><span>Cash App customers</span></div>
+      <div class="stat"><b>100s of M</b><span>accounts on Azure AD sign-in</span></div>
+      <div class="stat"><b>12M+</b><span>returns filed on Cash App Taxes</span></div>
+    </div>
+
+    <section id="products">
+      <p class="sec-label">01 · Products</p>
+      <h2>Things I've built. Go ahead, click.</h2>
+      <p class="sec-intro">Each product runs as a live demo that looks like the real thing. As you tap through, the panel beside it shows what happens under the hood.</p>
+
+      <div class="chips" role="tablist" id="chips"></div>
+      <div class="showcase">
+        <div class="stage" id="stage">
+          <div id="device"></div>
+          <div class="thumbs" id="thumbs" hidden></div>
+          <div class="stage-foot"><button id="replay">↺ Restart demo</button></div>
+        </div>
+        <div class="detail">
+          <div class="meta" id="d-meta"></div>
+          <h3 id="d-title"></h3>
+          <p class="role" id="d-role"></p>
+          <p class="sum" id="d-sum"></p>
+          <div class="impact" id="d-impact"></div>
+          <div class="hood">
+            <h4>Under the hood</h4>
+            <ol class="steps" id="d-steps"></ol>
+            <div class="note" id="d-note"></div>
+          </div>
+          <div class="more" id="d-more"></div>
+        </div>
+      </div>
+      <p class="disclaimer" id="disclaimer"></p>
+    </section>
+
+    <section id="career">
+      <p class="sec-label">02 · Career</p>
+      <h2>Fifteen years, one through-line: identity.</h2>
+      <p class="sec-intro">Pick a stretch of the timeline to see what I did there.</p>
+      <div class="tl">
+        <div class="tl-bar" id="tl-bar" role="tablist"></div>
+        <div class="years"><span>2012</span><span>2015</span><span>2018</span><span>2020</span><span>2023</span><span>2025</span><span>Now</span></div>
+        <div class="tl-card" id="tl-card"></div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <p class="sec-label">03 · Skills</p>
+      <h2>Toolbox</h2>
+      <div class="skills">
+        <div class="sk"><h4>Identity &amp; Security</h4><div class="tags"><span class="tag">OAuth 2.x</span><span class="tag">OIDC</span><span class="tag">FIDO2</span><span class="tag">Passkeys</span><span class="tag">PKCE</span><span class="tag">JWT</span><span class="tag">ReBAC</span><span class="tag">SSO</span><span class="tag">MFA</span></div></div>
+        <div class="sk"><h4>Architecture</h4><div class="tags"><span class="tag">Distributed systems</span><span class="tag">Microservices</span><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Azure</span><span class="tag">Reliability</span></div></div>
+        <div class="sk"><h4>AI &amp; Product</h4><div class="tags"><span class="tag">Claude API</span><span class="tag">MCP</span><span class="tag">LLM evals</span><span class="tag">FastAPI</span><span class="tag">PostgreSQL</span><span class="tag">PWA</span></div></div>
+        <div class="sk"><h4>Leadership</h4><div class="tags"><span class="tag">Technical strategy</span><span class="tag">System design</span><span class="tag">Mentorship</span><span class="tag">Org planning</span></div></div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <h2>Let's talk.</h2>
+      <p>Whether it's identity, security or platform architecture, I'm happy to chat. Email is the fastest way to reach me.</p>
+      <div class="cta">
+        <a class="btn primary" href="mailto:dydy.hadoola@gmail.com">dydy.hadoola@gmail.com</a>
+        <!-- TODO: add your LinkedIn profile URL, then uncomment:
+        <a class="btn" href="https://www.linkedin.com/in/YOUR-PROFILE" target="_blank" rel="noopener">LinkedIn ↗</a> -->
+        <a class="btn" href="https://github.com/HadeelElbitar" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Hadeel Elbitar</span><span>Seattle, WA</span></div></footer>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const b64url = bytes => btoa(String.fromCharCode(...bytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const rand = n => { const a = new Uint8Array(n); crypto.getRandomValues(a); return b64url(a); };
+  const sha256 = async s => b64url(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s))));
+  let timers = [];
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
+  const status = (dark) => `<div class="status" style="color:${dark ? "#fff" : "#000"}"><span>9:41</span><i>▂▄▆ ᯤ ▭</i></div>`;
+  const msSquares = `<span class="sq"><i style="background:#f25022"></i><i style="background:#7fba00"></i><i style="background:#00a4ef"></i><i style="background:#ffb900"></i></span>`;
+
+  // Each product: init() resets state, view() returns the screen HTML, enter(api) runs on every screen change,
+  // act(name, el, api) handles taps (on the device or in the note). api.step(i) lights up the steps list.
+  const P = [];
+
+  /* ------------------------------------------------------------ Readoactive (real) */
+  P.push({
+    id: "readoactive", name: "Readoactive", company: "Founder", years: "2026", frame: "phone", real: true,
+    brand: "#e4593a", badge: `<img src="assets/readoactive-icon.png" alt="">`, line: "My AI book tracker, live",
+    role: "Founder & sole engineer: product, AI, auth, infrastructure",
+    sum: "Share a BookTok or Reel and Readoactive finds every book in it, matches each one to a real edition, and tracks series, narrators and what's free to borrow at your library. Everything here is the real app: a screen recording and captures of the live site.",
+    impact: [["Live", " at readoactive.app"], ["5", " extraction strategies, scored"], ["OAuth 2.1", " + MCP server"]],
+    steps: ["Share a TikTok or Reel link, or upload the video", "Claude reads the speech, the caption and the covers on screen", "Each title is matched to a real edition (Open Library, Apple Books), with series from Wikidata", "Picked books land in your pile, with Libby availability and series progress"],
+    more: [["Open readoactive.app ↗", "https://readoactive.app"]],
+    shots: [["video", "assets/hero-capture-poster.jpg", "Demo"], ["assets/ra-landing.jpg", "assets/ra-landing.jpg", "Landing"], ["assets/ra-frame-4.2.jpg", "assets/ra-frame-4.2.jpg", "Found"], ["assets/ra-frame-9.4.jpg", "assets/ra-frame-9.4.jpg", "Series"]],
+    init() { this.shot = 0; },
+    view() {
+      const s = this.shots[this.shot][0];
+      return s === "video"
+        ? `<video id="ra-video" autoplay muted loop playsinline poster="assets/hero-capture-poster.jpg" style="background:#2a1a2e"><source src="assets/hero-capture.webm" type="video/webm"><source src="assets/hero-capture.mp4" type="video/mp4"></video>`
+        : `<img class="still fade" src="${s}" alt="Readoactive screen">`;
+    },
+    enter(api) {
+      const v = $("#ra-video");
+      if (v) v.addEventListener("timeupdate", () => this.shot === 0 && cur === this && api.step(Math.min(3, Math.floor(v.currentTime / (v.duration || 10) * 4))));
+      else api.step([-1, -1, 2, 4][this.shot]);
+      api.note(this.shot === 1
+        ? `The live landing page at <b>readoactive.app</b>, captured at phone size. Sign-in is passwordless: an emailed link, or Google.`
+        : `The API is its own <b>OAuth 2.1</b> server (PKCE, passwordless email, refresh rotation, dynamic client registration).
+          The same domain contract generates both the HTTP routes and an <b>MCP server</b>, so Claude can say
+          <span class="k">"add the books from this video to my pile"</span> and it works end to end.`);
+    },
+    act(a, el, api) { if (a.startsWith("shot:")) { this.shot = +a.slice(5); api.redraw(); this.enter(api); api.thumbs(); } }
+  });
+
+  /* ------------------------------------------------------------ Cash App Taxes */
+  P.push({
+    id: "taxes", name: "Cash App Taxes sign-in & verification", company: "Cash App · Identity", years: "2020 – 2023", frame: "phone",
+    brand: "#00d64f", badge: `<span style="background:#00d64f;font-size:21px">$</span>`, line: "IRS- & NIST-grade login for free filing",
+    role: "Tech Lead, Identity & Authentication",
+    sum: "Free tax filing needs IRS- and NIST-grade identity assurance. I designed the sign-in and verification: Cash App login, a carrier check that rejects VoIP numbers, and one-time codes. Switch to the Google Voice number in the panel to see it get stopped.",
+    impact: [["12M+", " returns filed for $0"], ["IRS", " & NIST compliant"], ["Non-VoIP", " verification"]],
+    steps: ["Start filing, then log in with Cash App", "Carrier lookup: the number must be a real mobile line, not VoIP", "A one-time code proves you hold the phone", "Two factors verified, so your return unlocks"],
+    more: [["cash.app/taxes ↗", "https://cash.app/taxes"]],
+    nums: { mobile: ["(206) 555-0142", "T-Mobile · mobile"], voip: ["(425) 555-0199", "Google Voice · VoIP"] },
+    init() { this.s = 0; this.which = this.which || "mobile"; this.typed = ""; this.err = false; this.code = ""; this.banner = false; },
+    view() {
+      const g = "#00d64f";
+      if (this.s === 0) return `${status(false)}<div class="ca fade" style="background:#fff">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="ca-logo">$</div>
+            <span style="background:#000;color:#fff;border-radius:999px;padding:7px 14px;font-size:13px">Log in</span></div>
+          <h5 style="font-size:31px;margin:22px 0 16px">File your federal and state taxes for free</h5>
+          <div style="border-radius:22px;background:#f3f0ff;padding:18px 16px 16px">
+            <div style="display:inline-block;background:#fff;border-radius:999px;padding:4px 10px;font-size:12px;color:#6b54d6;font-weight:500">Cash App Taxes</div>
+            <div style="font-size:21px;font-weight:500;letter-spacing:-.03em;margin:10px 0 4px;line-height:1.15">100% free from start to finish</div>
+            <div style="font-size:13px;color:#666;margin-bottom:14px">Federal and state. No upsells.</div>
+            <button class="pill lav tap" style="padding:13px" data-act="file">File now</button></div>
+          <div class="grow" style="flex:1"></div>
+          <div style="display:flex;gap:8px;font-size:11.5px;color:#555;justify-content:center"><span>🔒 Meets all IRS security standards</span></div></div>`;
+      if (this.s === 1) {
+        const [num] = this.nums[this.which];
+        const full = this.typed.length >= num.length;
+        return `${status(true)}<div class="ca fade" style="background:#000;color:#fff">
+          <div class="ca-logo">$</div>
+          <h5 style="font-size:26px">Log in using your phone</h5>
+          <div class="seg2"><span class="on">Phone number</span><span>Email</span></div>
+          <div class="ca-in ${this.err ? "bad" : ""}"><span class="cc">🇺🇸 +1 ⌄</span><span class="ph">${this.typed}</span></div>
+          ${this.err ? `<div class="ca-err">This number can't be used to verify your identity. Use a mobile number from a wireless carrier.</div>` : ""}
+          <button class="pill ${full && !this.err ? "tap" : ""}" style="margin-top:12px;background:${full ? "#fff" : "#2b2b2b"};color:${full ? "#000" : "rgba(255,255,255,.3)"}" data-act="continue">Continue</button>
+          <div class="or">or</div>
+          <button class="pill" style="background:#1c1c1c;color:#fff">🔑&nbsp; Log in with passkey</button>
+          <div class="fine">By continuing, you agree to the <u>Terms</u>, <u>E-Sign Consent</u> &amp; <u>Privacy Policy</u>. You'll receive a one-time code by text. Message and data rates may apply.</div></div>`;
+      }
+      if (this.s === 2) {
+        const d = this.code.padEnd(6, " ").split("");
+        return `${status(true)}<div class="ca" style="background:#000;color:#fff">
+          ${this.banner && !this.code ? `<button class="banner" data-act="fill"><span class="ic">💬</span><span><b>Messages</b> <small>now</small><br>Cash App: <b>730514</b> is your sign-in code. Don't share it with anyone.</span></button>` : ""}
+          <div class="ca-logo">$</div>
+          <h5 style="font-size:26px;margin-bottom:8px">Enter the code sent to ${this.nums.mobile[0]}</h5>
+          <p style="color:#8a8a8a;font-size:14px;margin:0 0 14px">${this.banner && !this.code ? "Tap the message to fill it in" : "&nbsp;"}</p>
+          <div class="otp">${d.map((c, i) => `<span class="${i < this.code.length ? "f" : ""}">${c.trim()}</span>`).join("")}</div>
+          <div style="color:#fff;font-size:14px;font-weight:500">Resend code</div>
+          <div style="flex:1"></div>
+          <button class="pill" style="background:${this.code.length === 6 ? "#fff" : "#2b2b2b"};color:${this.code.length === 6 ? "#000" : "rgba(255,255,255,.3)"}">${this.code.length === 6 ? "Verifying…" : "Continue"}</button></div>`;
+      }
+      const rows = [["Personal info", true], ["Income", true], ["Deductions & credits", false], ["Review & file", false]];
+      return `${status(false)}<div class="ca fade" style="background:#fff">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div class="ca-logo">$</div><span style="font-size:13px;color:#555">Cash App Taxes</span></div>
+          <h5 style="margin:20px 0 6px">Welcome back</h5>
+          <div style="display:inline-flex;align-self:flex-start;gap:6px;background:#e5fbe9;color:#0a7a32;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600;margin-bottom:16px">✓ Identity verified</div>
+          <div style="border-radius:22px;background:#f6f6f6;padding:16px">
+            <div style="font-size:12px;color:#777">2025 TAX RETURN</div>
+            <div style="font-size:19px;font-weight:500;letter-spacing:-.03em;margin:2px 0 10px">Federal &amp; state · $0</div>
+            ${rows.map(([t, d]) => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid #e8e8e8;font-size:14px"><span>${t}</span><span style="color:${d ? g : "#aaa"}">${d ? "✓" : "○"}</span></div>`).join("")}
+          </div><div style="flex:1"></div>
+          <button class="pill lav">Continue my return</button>
+          <button class="pill" style="background:#f2f2f2;margin-top:8px" data-act="reset">Log out</button></div>`;
+    },
+    enter(api) {
+      const pick = `<br><button data-act="num:mobile" aria-pressed="${this.which === "mobile"}">Try a mobile number</button><button data-act="num:voip" aria-pressed="${this.which === "voip"}">Try a Google Voice number</button>`;
+      if (this.s === 0) { api.step(0); api.note(`Tap <b>File now</b> to start.${pick}`); }
+      if (this.s === 1) {
+        const [num, kind] = this.nums[this.which];
+        api.step(this.err ? 1 : 0, this.err ? 0 : -1);
+        api.note(this.err ? `<span class="k">lookup</span>(+1 ${num}) → <span class="k">line_type</span>: <span class="no">nonFixedVoip ✗ rejected</span><br>VoIP numbers are easy to mint in bulk, so they can't prove who you are.${pick}`
+          : `Using <b>${num}</b> (${kind}).${pick}`);
+        if (this.typed.length < num.length) num.split("").forEach((c, i) => later(() => { this.typed = num.slice(0, i + 1); api.redraw(); }, 40 * (i + 1)));
+      }
+      if (this.s === 2) {
+        api.step(2, 1); api.note(`<span class="k">lookup</span>(+1 ${this.nums.mobile[0]}) → <span class="k">line_type</span>: <span class="yes">mobile ✓</span><br><span class="k">otp</span>: sent · 6 digits · expires in 10 min · 5 attempts`);
+        if (!this.banner) later(() => { this.banner = true; api.redraw(); }, 900);
+      }
+      if (this.s === 3) { api.step(4); api.note(`<span class="k">factors</span>: [phone possession, one-time code] → <span class="yes">assurance met ✓</span><br><span class="k">session</span>: taxes, step-up required to change bank details`); }
+    },
+    act(a, el, api) {
+      if (a === "file") this.go(api, 1);
+      if (a.startsWith("num:")) { this.which = a.slice(4); this.typed = ""; this.err = false; clearTimers(); if (this.s > 1) this.s = 1; if (this.s === 1) { api.redraw(); this.enter(api); } else this.enter(api); }
+      if (a === "continue") {
+        if (this.typed.length < this.nums[this.which][0].length) return;
+        if (this.which === "voip") { this.err = true; api.redraw(); this.enter(api); } else this.go(api, 2);
+      }
+      if (a === "fill" && !this.code) { "730514".split("").forEach((c, i) => later(() => { this.code += c; api.redraw(); }, 80 * (i + 1))); later(() => this.go(api, 3), 1100); }
+      if (a === "reset") api.restart();
+    }
+  });
+
+  /* ------------------------------------------------------------ Parental controls (ReBAC) */
+  P.push({
+    id: "families", name: "Parental controls for teen accounts", company: "Cash App · Authorization", years: "2020 – 2023", frame: "phone",
+    brand: "#00d64f", badge: `<span style="background:#000;font-size:18px">👪</span>`, line: "ReBAC behind sponsored teen accounts",
+    role: "Tech Lead, Authorization Platform",
+    sum: "I built Cash App's first relationship-based (ReBAC) authorization platform. It powers teen sponsorship and parental controls. Approve Emma's account, flip her controls, then ask the policy engine a question.",
+    impact: [["1st", " ReBAC platform at Cash App"], ["Parental controls", ""], ["Teen sponsorship", ""]],
+    steps: ["A parent approves a teen's account, which creates a sponsor relationship", "Each control the parent sets writes a relationship tuple", "Every request asks: is there a path from this teen to this action?", "A decision in milliseconds, and every change is audited"],
+    more: [["cash.app/families ↗", "https://cash.app/families"]],
+    init() { this.s = 0; this.on = { btc: false, stocks: true }; this.limit = 100; this.contacts = true; this.sheet = false; this.q = null; },
+    view() {
+      if (this.s === 0) return `${status(false)}<div class="ca" style="background:radial-gradient(120% 70% at 20% 10%, #c9f7cf 0%, #6ee08a 35%, #2cbf6b 60%, #9bd7f0 100%);justify-content:center;align-items:center">
+          <div class="fade" style="background:#fff;border-radius:26px;padding:22px 20px;width:100%;box-shadow:0 20px 40px rgba(0,0,0,.15)">
+            <div style="position:relative;width:46px;height:46px;margin-bottom:12px"><div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#f6c39b,#c9774a);display:grid;place-items:center;color:#fff;font-weight:700;font-size:19px">E</div><span style="position:absolute;right:-4px;bottom:-2px;background:#000;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:grid;place-items:center;border:2px solid #fff">★</span></div>
+            <div style="font-size:24px;font-weight:500;letter-spacing:-.035em;line-height:1.12;margin-bottom:6px">Review and approve Emma's account</div>
+            <div style="font-size:13px;color:#666;margin-bottom:16px">Emma (15) wants to use Cash App. You'll sponsor her account and set her controls.</div>
+            <button class="pill tap" style="background:#000;color:#fff" data-act="approve">Approve</button></div></div>`;
+      const tg = (k, l, sub, ic) => `<div class="crow"><span class="ico">${ic}</span><span class="lbl">${l}<small>${sub}</small></span><button class="tg" role="switch" aria-label="${l}" aria-checked="${this.on[k]}" data-act="t:${k}"></button></div>`;
+      return `${status(true)}<div class="ca" style="background:#000;color:#fff;padding-top:54px">
+          <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;color:#8a8a8a">‹ Family</span><span style="font-size:13px;color:#8a8a8a">Sponsor</span></div>
+          <div style="display:flex;align-items:center;gap:12px;margin:14px 0 6px">
+            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f6c39b,#c9774a);display:grid;place-items:center;font-weight:700">E</div>
+            <div><div style="font-size:17px;font-weight:500">Emma</div><div style="font-size:12.5px;color:#8a8a8a">$emmaj · Age 15</div></div></div>
+          <div style="font-size:40px;font-weight:500;letter-spacing:-.04em;margin:6px 0 10px">$85.00</div>
+          <div style="display:flex;gap:8px;margin-bottom:10px"><span style="flex:1;text-align:center;background:#1c1c1c;border-radius:999px;padding:9px;font-size:14px">Add money</span><span style="flex:1;text-align:center;background:#1c1c1c;border-radius:999px;padding:9px;font-size:14px">Withdraw</span></div>
+          <div style="font-size:12px;color:#8a8a8a;margin-top:6px;letter-spacing:.02em">CONTROLS</div>
+          ${tg("btc", "Bitcoin", "Buy, sell and send", "₿")}
+          ${tg("stocks", "Stocks", "Invest from $1", "📈")}
+          <button class="crow" data-act="limit"><span class="ico">💳</span><span class="lbl">Spend limit<small>Cash Card, per month</small></span><span class="val">$${this.limit} ›</span></button>
+          <button class="crow" data-act="contacts"><span class="ico">👥</span><span class="lbl">Who Emma can pay<small>${this.contacts ? "Approved contacts only" : "Anyone"}</small></span><span class="val">›</span></button>
+          ${this.sheet ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:5"></div><div class="sheet">
+            <div style="font-size:22px;font-weight:500;letter-spacing:-.03em">Set spend limit</div>
+            <div class="lim">${[50, 100, 200, 500, 1000].map(v => `<button data-act="lim:${v}" class="${v === this.limit ? "on" : ""}">$${v}</button>`).join("")}<button>…</button></div>
+            <button class="pill" style="background:#fff;color:#000" data-act="done">Done</button></div>` : ""}
+        </div>`;
+    },
+    tuples() {
+      const t = [`<b>user:you</b> <span class="k">sponsor</span> account:emma`];
+      if (this.on.btc) t.push(`account:emma <span class="k">allowed</span> feature:bitcoin`);
+      if (this.on.stocks) t.push(`account:emma <span class="k">allowed</span> feature:stocks`);
+      t.push(`account:emma <span class="k">card_limit</span> $${this.limit}/mo`);
+      t.push(this.contacts ? `account:emma <span class="k">can_pay</span> contacts:approved` : `account:emma <span class="k">can_pay</span> *`);
+      return t.join("<br>");
+    },
+    checks: [
+      ["btc", "Can Emma buy $20 of bitcoin?", s => s.on.btc ? ["ALLOW", "account:emma → feature:bitcoin"] : ["DENY", "no path to feature:bitcoin"]],
+      ["pay", "Can Emma pay @jordan (not approved)?", s => s.contacts ? ["DENY", "@jordan ∉ contacts:approved"] : ["ALLOW", "can_pay *"]],
+      ["spend", "Can Emma spend $150 this month?", s => 150 <= s.limit ? ["ALLOW", `$150 ≤ $${s.limit} limit`] : ["DENY", `$150 > $${s.limit} limit`]],
+    ],
+    enter(api, at) {
+      if (this.s === 0) { api.step(-1); api.note(`Tap <b>Approve</b> to sponsor Emma's account.`); return; }
+      let res = "";
+      if (this.q) { const c = this.checks.find(x => x[0] === this.q); const [d, why] = c[2](this); res = `<br><br><span class="k">check</span>(emma, ${this.q}) → <span class="${d === "ALLOW" ? "yes" : "no"}">${d}</span> · ${why} · 3ms`; }
+      api.note(`${this.tuples()}${res}<br>${this.checks.map(([k, t]) => `<button data-act="q:${k}">${t}</button>`).join("")}`);
+      api.step(at ?? 0, at ? at - 1 : -1);
+    },
+    act(a, el, api) {
+      if (a === "approve") { this.s = 1; api.redraw(); this.enter(api, 1); }
+      if (a.startsWith("t:")) { const k = a.slice(2); this.on[k] = !this.on[k]; api.redraw(); this.enter(api, 1); }
+      if (a === "contacts") { this.contacts = !this.contacts; api.redraw(); this.enter(api, 1); }
+      if (a === "limit") { this.sheet = true; api.redraw(); }
+      if (a.startsWith("lim:")) { this.limit = +a.slice(4); api.redraw(); }
+      if (a === "done") { this.sheet = false; api.redraw(); this.enter(api, 1); }
+      if (a.startsWith("q:")) { this.q = a.slice(2); this.enter(api, 2); later(() => api.step(3, 2), 600); }
+    }
+  });
+
+  /* ------------------------------------------------------------ Azure AD consent + PKCE */
+  P.push({
+    id: "aad", name: "Azure AD app consent & PKCE", company: "Microsoft · Azure Active Directory", years: "2015 – 2018", frame: "browser",
+    brand: "#0078d4", badge: `<span style="background:#fff">${msSquares}</span>`, line: "Consent, PKCE and on-behalf-of flows",
+    role: "Senior Software Engineer, Azure AD",
+    sum: "I owned core features of Microsoft's identity platform: third-party app consent, max_age enforcement and on-behalf-of flows. I also supervised the PKCE code flow that rolled out across Microsoft. The screens follow today's Microsoft sign-in, and the PKCE values in the panel are computed live in your browser.",
+    impact: [["100s of M", " accounts"], ["PKCE", " across Microsoft"], ["AAD v2.0", " endpoint"]],
+    steps: ["The app makes a secret code_verifier and sends only its SHA-256 hash", "The user signs in at login.microsoftonline.com", "The user approves the permissions the app asks for (consent)", "The app redeems the code with the original verifier, and the server hashes and compares it"],
+    more: [["How consent works ↗", "https://learn.microsoft.com/entra/identity-platform/application-consent-experience"]],
+    perms: [["Read your files", "Allows the app to read all files you can access."], ["View your basic profile", "Allows the app to see your basic profile (name, picture, user name, email address)."], ["Maintain access to data you have given it access to", "Allows the app to see and update the data you gave it access to, even when you are not currently using the app."]],
+    url() { return ["notes.contoso.com", "login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=…&code_challenge=" + (this.chal || "").slice(0, 12) + "…", "login.microsoftonline.com/common/login", "login.microsoftonline.com/common/oauth2/v2.0/authorize", "notes.contoso.com/"][this.s]; },
+    init() { this.s = 0; this.open = {}; this.admin = false; this.pw = ""; this.newPkce(); },
+    async newPkce() { this.ver = rand(32); this.chal = await sha256(this.ver); },
+    view() {
+      const blue = "#0067b8";
+      if (this.s === 0) return `<div class="fade" style="padding:0;height:100%;background:#fbfaf8">
+          <div style="display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid #eee"><span style="width:24px;height:24px;border-radius:6px;background:#3b5bdb;color:#fff;display:grid;place-items:center;font-size:13px">✎</span><b style="font-size:15px">Contoso Notes</b></div>
+          <div style="padding:46px 36px"><div style="font:600 28px Georgia,serif;line-height:1.15;margin-bottom:10px">Your notes, next to<br>your work files.</div>
+          <p style="color:#555;margin:0 0 26px;font-size:14px">Sign in with your work or school account to get started.</p>
+          <button class="msbtn tap" data-act="next">${msSquares} Sign in with Microsoft</button></div></div>`;
+      const card = inner => `<div class="ms-bg"><div style="width:380px;max-width:92%"><div class="ms-card">${inner}</div>
+          ${this.s === 1 ? `<div class="ms-card" style="margin-top:14px;padding:12px 32px;font-size:14px">🔑&nbsp; Sign-in options</div>` : ""}</div></div>`;
+      if (this.s === 1) return card(`<div class="ms-logo">${msSquares} Microsoft</div><h6>Sign in</h6>
+          <div class="ms-in">you@contoso.com</div>
+          <div style="font-size:13px;margin-bottom:6px">No account? <span class="ms-link">Create one!</span></div>
+          <div style="font-size:13px;margin-bottom:22px" class="ms-link">Can't access your account?</div>
+          <div style="text-align:right"><button class="ms-btn tap" data-act="next">Next</button></div>`);
+      if (this.s === 2) return card(`<div class="ms-logo">${msSquares} Microsoft</div><div style="font-size:14px">← you@contoso.com</div><h6>Enter password</h6>
+          <div class="ms-in" style="letter-spacing:2px">${this.pw || "&nbsp;"}</div>
+          <div style="font-size:13px;margin-bottom:22px" class="ms-link">Forgot my password</div>
+          <div style="text-align:right"><button class="ms-btn ${this.pw ? "tap" : ""}" data-act="next">Sign in</button></div>`);
+      if (this.s === 3) return `<div class="ms-bg"><div class="ms-card" style="padding:20px 26px 18px">
+          <div class="ms-logo" style="margin-bottom:10px">${msSquares} Microsoft</div>
+          <div style="font-size:13px;margin-bottom:6px">you@contoso.com</div>
+          <h6 style="font-size:21px;margin:0 0 10px">Permissions requested${this.admin ? `<div style="font-size:13px;font-weight:400">Accept for your organization</div>` : ""}</h6>
+          <div style="display:flex;gap:10px;margin-bottom:8px"><span style="width:38px;height:38px;border-radius:6px;background:#3b5bdb;color:#fff;display:grid;place-items:center;font-size:18px;flex:none">✎</span>
+            <div style="line-height:1.35"><div style="font-size:14.5px">Contoso Notes</div><div class="ms-link" style="font-size:13px">Contoso Ltd <span style="display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;background:#0067b8;color:#fff;font-size:9px">✓</span></div></div></div>
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px">This application is not published by Microsoft.</div>
+          <div style="font-size:14px;margin-bottom:4px">This app would like to:</div>
+          ${this.perms.map(([t, d], i) => `<button class="perm ${this.open[i] ? "open" : ""}" data-act="perm:${i}"><span class="chev">⌄</span><span>${t}${this.open[i] ? `<small>${d}</small>` : ""}</span></button>`).join("")}
+          <label style="display:flex;gap:7px;align-items:flex-start;font-size:13px;margin:8px 0 2px;cursor:pointer"><input type="checkbox" data-act="admin" ${this.admin ? "checked" : ""}> Consent on behalf of your organization</label>
+          <div class="ms-tiny">Accepting these permissions means that you allow this app to use your data as specified in their terms of service and privacy statement. You can change these permissions at https://myapps.microsoft.com. <span class="ms-link">Show details</span></div>
+          <div class="ms-tiny" style="margin-top:0">Does this app look suspicious? <span class="ms-link">Report it here</span></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end"><button class="ms-btn2" data-act="reset">Cancel</button><button class="ms-btn tap" data-act="next">Accept</button></div></div></div>`;
+      return `<div class="fade" style="height:100%;background:#fbfaf8">
+          <div style="display:flex;align-items:center;gap:10px;padding:14px 22px;border-bottom:1px solid #eee"><span style="width:24px;height:24px;border-radius:6px;background:#3b5bdb;color:#fff;display:grid;place-items:center;font-size:13px">✎</span><b style="font-size:15px">Contoso Notes</b>
+            <span style="margin-left:auto;width:28px;height:28px;border-radius:50%;background:#0067b8;color:#fff;display:grid;place-items:center;font-size:12px">YO</span></div>
+          <div style="padding:22px 26px"><div style="font-size:13px;color:#2a7a3a;font-weight:600;margin-bottom:12px">✓ Signed in as you@contoso.com</div>
+          <div style="font-size:12px;color:#777;margin-bottom:6px">RECENT FILES · from OneDrive</div>
+          <div style="display:grid;gap:7px;font-size:14px">${["Q3 planning.docx", "Design review notes.docx", "Offsite agenda.pptx", "Budget FY26.xlsx"].map(f => `<div style="padding:10px 12px;background:#fff;border:1px solid #e8e8e8;border-radius:6px">📄 ${f}</div>`).join("")}</div>
+          <button data-act="reset" style="margin-top:16px;background:none;border:1px solid #ccc;padding:6px 14px;font-size:13px">Sign out</button></div></div>`;
+    },
+    async enter(api) {
+      if (!this.chal) await this.newPkce();
+      api.step(this.s === 4 ? 4 : this.s === 2 ? 1 : this.s === 3 ? 2 : this.s, this.s - 1);
+      const base = `<span class="k">code_verifier</span> <span style="opacity:.7">(stays in the app)</span>:<br><b>${this.ver}</b><br><span class="k">code_challenge</span> = BASE64URL(SHA256(verifier)):<br><b>${this.chal}</b>`;
+      const tail = { 0: `<br><button data-act="regen">Generate a new verifier</button>`,
+        3: `<br><br><span class="k">scope</span>: Files.Read User.Read offline_access${this.admin ? `<br><span class="k">prompt</span>=admin_consent → tenant-wide grant` : ""}`,
+        4: `<br><br>POST /oauth2/v2.0/token · <span class="k">code_verifier</span>=${this.ver.slice(0, 10)}…<br>SHA256(verifier) == challenge → <span class="yes">tokens issued ✓</span>` }[this.s] || "";
+      api.note(base + tail);
+      if (this.s === 2 && !this.pw) "••••••••••".split("").forEach((c, i) => later(() => { this.pw += c; api.redraw(); }, 60 * (i + 1)));
+    },
+    act(a, el, api) {
+      if (a === "next") this.go(api, this.s + 1);
+      if (a === "reset") api.restart();
+      if (a === "regen") this.newPkce().then(() => this.enter(api));
+      if (a.startsWith("perm:")) { const i = a.slice(5); this.open[i] = !this.open[i]; api.redraw(); }
+      if (a === "admin") { this.admin = el.checked; api.redraw(); this.enter(api); }
+    }
+  });
+
+  /* ------------------------------------------------------------ Power BI */
+  P.push({
+    id: "powerbi", name: "Power BI data mashup engine", company: "Microsoft · Power BI", years: "2012 – 2015", frame: "window",
+    brand: "#f2c811", badge: `<span style="background:#f2c811;color:#000"><span style="display:flex;gap:2px;align-items:flex-end;height:18px"><i style="width:3px;height:8px;background:#252423"></i><i style="width:3px;height:13px;background:#252423"></i><i style="width:3px;height:18px;background:#252423"></i></span></span>`, line: "The engine behind Power Query",
+    role: "Software Engineer, Mashup Engine",
+    sum: "I worked on the data mashup engine behind Power Query and Power BI. It combines sources, records each transformation as a step in the M language, and refreshes reports automatically. Merge the targets in, expand the column, click any applied step, then hit Refresh Preview.",
+    impact: [["Core", " of Power BI"], ["Auto-refresh", " pipelines"], ["Faster", " query execution"]],
+    steps: ["Connect to sources: a SQL database and an Excel workbook", "Shape and combine them; each click becomes a step in M", "The engine folds work back to the source where it can", "Refresh re-runs every step against live data"],
+    more: [["Power Query docs ↗", "https://learn.microsoft.com/power-query/"]],
+    init() {
+      this.stage = 0; this.sel = null; this.dlg = false; this.pop = false; this.flash = false; this.t = "3:02 PM";
+      this.rows = [["West", "Seattle", 412300], ["East", "Boston", 388150], ["Central", "Chicago", 251900], ["South", "Austin", 297420], ["North", "Minneapolis", 173080]];
+      this.tg = { West: 400000, East: 420000, Central: 240000, South: 300000, North: 160000 };
+    },
+    stepsFor() {
+      const s = [["Source", `= Sql.Database("sales-db.contoso.com", "Reporting")`, 0], ["Navigation", `= Source{[Schema="dbo",Item="Sales"]}[Data]`, 0], ["Changed Type", `= Table.TransformColumnTypes(Navigation,{{"Region", type text}, {"Revenue", Int64.Type}})`, 0]];
+      if (this.stage >= 1) s.push(["Merged Queries", `= Table.NestedJoin(#"Changed Type", {"Region"}, Targets, {"Region"}, "Targets", JoinKind.LeftOuter)`, 1]);
+      if (this.stage >= 2) s.push(["Expanded Targets", `= Table.ExpandTableColumn(#"Merged Queries", "Targets", {"Target"}, {"Target"})`, 2]);
+      return s;
+    },
+    view() {
+      const steps = this.stepsFor(), cur = this.sel ?? steps.length - 1, at = steps[cur][2];
+      const fmt = n => n.toLocaleString("en-US");
+      const rb = (ic, l, act, dis) => `<button class="rb ${act && !dis && this.stage === (act === "merge" ? 0 : 99) ? "tap" : ""}" ${act ? `data-act="${act}"` : ""} ${dis ? "disabled" : ""}><span class="ri">${ic}</span>${l}</button>`;
+      const cols = `<th></th><th><span class="ty">A<sup>B</sup>C</span>Region<span class="dd">▾</span></th><th><span class="ty">A<sup>B</sup>C</span>City<span class="dd">▾</span></th><th><span class="ty">1²3</span>Revenue<span class="dd">▾</span></th>` +
+        (at === 1 ? `<th style="position:relative"><span class="ty">▦</span>Targets<button class="xp ${this.stage === 1 && !this.pop ? "tap" : ""}" data-act="pop" title="Expand">⇔</button>${this.pop ? `<div class="pop"><b>Expand</b><label><input type="checkbox" disabled> Region</label><label><input type="checkbox" checked disabled> Target</label><label style="margin-top:4px;color:#605e5c"><input type="checkbox" disabled> Use original column name as prefix</label><div class="btns"><button class="pri" data-act="expand">OK</button><button data-act="pop">Cancel</button></div></div>` : ""}</th>` : "") +
+        (at === 2 ? `<th><span class="ty">1²3</span>Target<span class="dd">▾</span></th>` : "");
+      const body = this.rows.map(([r, c, v], i) => `<tr class="${this.flash ? "fl" : ""}"><td class="rn">${i + 1}</td><td>${r}</td><td>${c}</td><td class="n">${fmt(v)}</td>${at === 1 ? `<td class="tab">Table</td>` : ""}${at === 2 ? `<td class="n">${fmt(this.tg[r])}</td>` : ""}</tr>`).join("");
+      const ncol = 3 + (at ? 1 : 0);
+      return `<div class="pq">
+        <div class="pq-title"><span class="pbi"><span><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i></span></span>Sales report - Power Query Editor<span class="wc"><span>—</span><span>☐</span><span>✕</span></span></div>
+        <div class="pq-tabs"><span class="file">File</span><span class="on">Home</span><span>Transform</span><span>Add Column</span><span>View</span><span>Tools</span><span>Help</span></div>
+        <div class="ribbon">
+          <div class="rg"><div class="bs">${rb("💾", "Close &amp;<br>Apply")}</div><div class="lbl">Close</div></div>
+          <div class="rg"><div class="bs">${rb("🗄️", "New<br>Source ▾")}${rb("🕘", "Recent<br>Sources ▾")}</div><div class="lbl">New Query</div></div>
+          <div class="rg"><div class="bs">${rb("🔄", "Refresh<br>Preview ▾", "refresh")}${rb("📝", "Advanced<br>Editor")}</div><div class="lbl">Query</div></div>
+          <div class="rg"><div class="bs">${rb("▥", "Choose<br>Columns ▾")}${rb("⊟", "Remove<br>Columns ▾")}</div><div class="lbl">Manage Columns</div></div>
+          <div class="rg" style="border:0"><div class="bs">${rb("⛓", "Merge<br>Queries ▾", "merge", this.stage > 0)}${rb("⧉", "Append<br>Queries ▾")}</div><div class="lbl">Combine</div></div>
+        </div>
+        <div class="fx"><b>fx</b><span>${steps[cur][1]}</span></div>
+        <div class="pq-main">
+          <div class="qpane"><div class="h">Queries [2]</div><div class="q on"><span class="tbl-ic"></span>Sales</div><div class="q"><span class="tbl-ic"></span>Targets</div></div>
+          <div class="grid"><table><tr>${cols}</tr>${body}</table></div>
+          <div class="settings"><div class="sh">Query Settings</div>
+            <div class="cap">PROPERTIES</div><div style="font-size:10.5px;color:#605e5c">Name</div><div class="nm">Sales</div><div class="ms-link" style="font-size:10.5px">All Properties</div>
+            <div class="cap">APPLIED STEPS</div>
+            ${steps.map(([n], i) => `<button class="stp ${i === cur ? "on" : ""}" data-act="sel:${i}"><span>${n}</span><em>${i === 1 || i >= 3 ? "⚙" : ""}</em></button>`).join("")}
+          </div>
+        </div>
+        <div class="pq-status"><span>${ncol} COLUMNS, 5 ROWS &nbsp;&nbsp; Column profiling based on top 1000 rows</span><span>PREVIEW DOWNLOADED AT ${this.t}</span></div>
+        ${this.dlg ? `<div class="dlg-back"><div class="dlg"><h6>Merge</h6><div style="color:#605e5c">Select a table and matching columns to create a merged table.</div>
+          <div style="margin-top:8px;font-weight:600">Sales</div><div class="mini"><table><tr><th class="sel">Region</th><th>City</th><th>Revenue</th></tr><tr><td class="sel">West</td><td>Seattle</td><td>412,300</td></tr><tr><td class="sel">East</td><td>Boston</td><td>388,150</td></tr></table></div>
+          <div class="dd2"><span>Targets</span><span>⌄</span></div>
+          <div class="mini"><table><tr><th class="sel">Region</th><th>Target</th></tr><tr><td class="sel">West</td><td>400,000</td></tr><tr><td class="sel">East</td><td>420,000</td></tr></table></div>
+          <div style="color:#605e5c">Join Kind</div><div class="dd2"><span>Left Outer (all from first, matching from second)</span><span>⌄</span></div>
+          <div class="ok">✓ The selection matches 5 of 5 rows from the first table.</div>
+          <div class="btns"><button class="pri tap" data-act="merged">OK</button><button data-act="cancel">Cancel</button></div></div></div>` : ""}
+      </div>`;
+    },
+    enter(api) {
+      api.step(this.stage === 0 ? 0 : 1, this.stage === 0 ? -1 : 0);
+      const lines = [`<span class="k">let</span>`, `&nbsp; Source = Sql.Database("sales-db.contoso.com", "Reporting"),`, `&nbsp; Navigation = Source{[Schema="dbo",Item="Sales"]}[Data],`, `&nbsp; #"Changed Type" = Table.TransformColumnTypes(…)`];
+      if (this.stage >= 1) lines.push(`&nbsp; #"Merged Queries" = Table.NestedJoin(…, Targets, …)`);
+      if (this.stage >= 2) lines.push(`&nbsp; #"Expanded Targets" = Table.ExpandTableColumn(…)`);
+      api.note(lines.join(",<br>").replace(/,,/g, ",") + `<br><span class="k">in</span> ${this.stepsFor().slice(-1)[0][0].includes(" ") ? `#"${this.stepsFor().slice(-1)[0][0]}"` : this.stepsFor().slice(-1)[0][0]}<br><br>Targets = Excel.Workbook(File.Contents("targets.xlsx"))`);
+    },
+    act(a, el, api) {
+      if (a === "merge") { this.dlg = true; this.sel = null; api.redraw(); }
+      if (a === "cancel") { this.dlg = false; api.redraw(); }
+      if (a === "merged") { this.dlg = false; this.stage = 1; this.sel = null; api.redraw(); this.enter(api); }
+      if (a === "pop") { this.pop = !this.pop; api.redraw(); }
+      if (a === "expand") { this.pop = false; this.stage = 2; this.sel = null; api.redraw(); this.enter(api); }
+      if (a.startsWith("sel:")) { this.sel = +a.slice(4); this.pop = false; api.redraw(); }
+      if (a === "refresh") {
+        this.rows = this.rows.map(([r, c, v]) => [r, c, Math.max(120000, v + Math.round((Math.random() - .4) * 30000))]);
+        this.t = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }).toUpperCase(); this.flash = true; api.redraw();
+        api.step(2, 1); later(() => { this.flash = false; api.step(4); }, 900);
+        api.note(`<span class="k">query folding</span>: Source → Changed Type sent to SQL as one SELECT ✓<br>${this.stage ? `<span class="k">merge</span>: Targets read from Excel, joined locally<br>` : ""}<span class="k">refresh</span>: 5 rows · ${this.stage ? 2 : 1} source${this.stage ? "s" : ""} · ${120 + Math.round(Math.random() * 90)}ms`);
+      }
+    }
+  });
+
+  // ------------------------------------------------------------ showcase engine
+  let cur = null;
+  const stage = $("#stage"), device = $("#device");
+  const screenEl = () => cur.frame === "phone" ? $(".screen", device) : $(".page", device);
+  const api = {
+    step(i, doneUpTo) { $$("#d-steps li").forEach((li, j) => { li.className = j === i ? "on" : (j < i || j <= (doneUpTo ?? -1)) ? "done" : ""; }); },
+    note(html) { $("#d-note").innerHTML = html; },
+    redraw() { screenEl().innerHTML = cur.view(); if (cur.url) $(".url", device).textContent = cur.url(); },
+    restart() { clearTimers(); cur.init(); api.redraw(); cur.enter?.(api); },
+    thumbs() {
+      const t = $("#thumbs");
+      t.hidden = !cur.shots;
+      if (cur.shots) t.innerHTML = cur.shots.map(([, img, l], i) => `<button data-act="shot:${i}" aria-pressed="${i === cur.shot}" title="${l}"><img src="${img}" alt="${l}">${i === 0 ? "<span>▶</span>" : ""}</button>`).join("");
+    }
+  };
+  P.forEach(p => { p.go = function (a, s) { this.s = s; a.redraw(); this.enter?.(a); }; });
+
+  function fit() {
+    if (!cur) return;
+    device.style.transform = "";
+    const avail = stage.clientWidth - 24, w = device.firstElementChild.offsetWidth;
+    const k = Math.min(1, avail / w);
+    device.style.transform = k < 1 ? `scale(${k})` : "";
+    device.style.marginBottom = k < 1 ? `${-(1 - k) * device.firstElementChild.offsetHeight}px` : "";
+  }
+  addEventListener("resize", fit);
+
+  function select(id, scroll) {
+    clearTimers();
+    cur = P.find(p => p.id === id);
+    stage.style.setProperty("--brand", cur.brand);
+    device.innerHTML = cur.frame === "phone" ? `<div class="phone"><div class="screen"></div></div>`
+      : cur.frame === "browser" ? `<div class="win"><div class="bar"><i></i><i></i><i></i><div class="url"></div></div><div class="page"></div></div>`
+      : `<div class="win" style="height:440px"><div class="page"></div></div>`;
+    $("#d-meta").textContent = `${cur.company} · ${cur.years}`;
+    $("#d-title").textContent = cur.name;
+    $("#d-role").textContent = cur.role;
+    $("#d-sum").textContent = cur.sum;
+    $("#d-impact").innerHTML = cur.impact.map(([b, t]) => `<span><b>${b}</b>${t}</span>`).join("");
+    $("#d-steps").innerHTML = cur.steps.map(s => `<li>${s}</li>`).join("");
+    $("#d-more").innerHTML = (cur.more || []).map(([t, h]) => `<a href="${h}" target="_blank" rel="noopener">${t}</a>`).join("");
+    $("#disclaimer").textContent = cur.real
+      ? "The real Readoactive app: a screen recording and captures of the live site."
+      : "Recreated in HTML to look like the real product today. Interactive and simplified, with sample data and no internal details.";
+    $("#replay").style.visibility = cur.real ? "hidden" : "visible";
+    $$(".chip").forEach(c => c.setAttribute("aria-selected", c.dataset.id === id));
+    api.note(""); api.step(-1);
+    cur.init();
+    api.redraw();
+    api.thumbs();
+    cur.enter?.(api);
+    fit();
+    try { history.replaceState(null, "", "#" + id); } catch (e) {}
+    if (scroll) $("#products").scrollIntoView({ behavior: "smooth" });
+  }
+
+  const label = p => ({ aad: "Azure AD consent", families: "Parental controls", powerbi: "Power BI", taxes: "Cash App Taxes" })[p.id] || p.name;
+  $("#chips").innerHTML = P.map(p => `<button class="chip" role="tab" data-id="${p.id}"><span class="badge">${p.badge}</span>${label(p)}</button>`).join("");
+  $("#tiles").innerHTML = P.map(p => `<button class="tile" data-id="${p.id}"><span class="badge">${p.badge}</span><span><b>${label(p)}</b><span class="sub">${p.company.split(" · ")[0]} · ${p.line}</span></span><span class="go">→</span></button>`).join("");
+  $("#chips").addEventListener("click", e => { const c = e.target.closest(".chip"); if (c) { select(c.dataset.id); c.scrollIntoView({ inline: "nearest", block: "nearest", behavior: "smooth" }); } });
+  $("#tiles").addEventListener("click", e => { const t = e.target.closest(".tile"); if (t) select(t.dataset.id, true); });
+  $("#replay").addEventListener("click", () => api.restart());
+  document.addEventListener("click", e => {
+    const el = e.target.closest("[data-act]");
+    if (el && cur && (stage.contains(el) || $("#d-note").contains(el))) cur.act?.(el.dataset.act, el, api);
+  });
+
+  // ------------------------------------------------------------ career timeline
+  const T = [
+    { k: "pbi", org: "Microsoft", team: "Power BI / Mashup Engine", y: "2012 – 2015", span: 3, c: "#7a6400", where: "Redmond", demos: ["powerbi"],
+      b: ["Built the next-generation data mashup engine at the core of Power BI.", "Delivered auto-refresh pipelines and query execution improvements.", "Partnered with PMs and architects to grow it into a foundation for Microsoft's analytics business."] },
+    { k: "aad", org: "Microsoft", team: "Azure Active Directory", y: "2015 – 2018", span: 3, c: "#0067b8", where: "Redmond", demos: ["aad"],
+      b: ["Owned third-party app consent, access-token max_age enforcement and on-behalf-of flows.", "Supervised the PKCE code-flow implementation later rolled out across Microsoft.", "Helped converge consumer and enterprise identity into one SSO model (AAD v2.0)."] },
+    { k: "lyft", org: "Lyft", team: "Identity", y: "2018 – 2020", span: 2, c: "#c2008f", where: "Remote", demos: [],
+      b: ["Led identity integration after the Motivate acquisition, migrating millions of bike-share riders with zero disruption.", "Designed login and account federation across multiple mobility apps.", "Shaped the next-generation identity strategy with product and security."] },
+    { k: "id", org: "Cash App", team: "Identity & Authentication", y: "2020 – 2023", span: 3, c: "#00a63e", where: "Remote", demos: ["taxes", "families"],
+      b: ["Introduced OAuth2, OIDC, FIDO and passkeys to Cash App.", "Delivered IRS- and NIST-compliant login for Cash App Taxes.", "Built the first ReBAC authorization platform, for parental controls and teen sponsorship.", "Led quarterly planning for the Identity org."] },
+    { k: "fin", org: "Cash App", team: "Financial Platform", y: "2023 – 2025", span: 2, c: "#008a34", where: "Remote", demos: [],
+      b: ["Drove decomposition of the financial monolith into microservices, improving developer velocity by 30%.", "Defined the multi-year infrastructure modernization strategy.", "Championed reliability practices that reduced incidents across core payment services.", "Developed future tech leads across teams."] },
+    { k: "core", org: "Cash App", team: "Core Experiences", y: "2025 – now", span: 1.6, c: "#006e29", where: "Remote", demos: [],
+      b: ["Led migration of 30%+ of web traffic to a new stack, reducing downtime by 25%.", "Launched secure web login for Afterpay Checkout.", "Implemented Scoped Sessions across Cash APIs.", "Set session-management standards that improved release quality by 20%."] },
+  ];
+  $("#tl-bar").innerHTML = T.map(t => `<button class="seg" role="tab" data-k="${t.k}" style="flex:${t.span};background:${t.c}">${t.org}<small>${t.team}</small></button>`).join("");
+  function tl(k) {
+    const t = T.find(x => x.k === k);
+    $$(".seg").forEach(s => s.setAttribute("aria-selected", s.dataset.k === k));
+    $("#tl-card").innerHTML = `<div class="when"><strong>${t.org}</strong>${t.team}<br>${t.y} · ${t.where}</div>
+      <div class="fade"><ul>${t.b.map(x => `<li>${x}</li>`).join("")}</ul>
+      <div class="jump">${t.demos.map(d => `<button data-demo="${d}">Try ${label(P.find(p => p.id === d))} →</button>`).join("")}</div></div>`;
+  }
+  $("#tl-bar").addEventListener("click", e => { const s = e.target.closest(".seg"); if (s) tl(s.dataset.k); });
+  $("#tl-card").addEventListener("click", e => { const b = e.target.closest("[data-demo]"); if (b) select(b.dataset.demo, true); });
+  tl("id");
+
+  const start = location.hash.slice(1);
+  select(P.some(p => p.id === start) ? start : "readoactive");
+  if (P.some(p => p.id === start)) requestAnimationFrame(() => $("#products").scrollIntoView());
+})();
+</script>
+</body>
+</html>
