@@ -43,6 +43,9 @@
   nav ul { list-style: none; display: flex; gap: 26px; margin: 0; padding: 0; font-size: 14px; }
   nav a { text-decoration: none; color: var(--muted); }
   nav a:hover { color: var(--ink); }
+  nav a.cv { color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; }
+  nav a.cv:hover { border-color: var(--ink); }
+  .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #3ccf7a; margin-right: 6px; box-shadow: 0 0 0 3px rgba(60,207,122,.2); vertical-align: 1px; }
 
   /* hero */
   .hero { padding: 76px 0 40px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px; align-items: center; }
@@ -329,6 +332,7 @@
         <li><a href="#career">Career</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li><a class="cv" href="Hadeel-Elbitar-Resume.pdf" download>Résumé ↓</a></li>
       </ul>
     </nav>
   </div>
@@ -347,6 +351,7 @@
         </p>
         <div class="cta">
           <a class="btn primary" href="#products">Try the products</a>
+          <a class="btn" href="Hadeel-Elbitar-Resume.pdf" download>Download résumé ↓</a>
           <a class="btn" href="mailto:dydy.hadoola@gmail.com">Get in touch</a>
         </div>
       </div>
@@ -418,6 +423,7 @@
         <a class="btn primary" href="mailto:dydy.hadoola@gmail.com">dydy.hadoola@gmail.com</a>
         <a class="btn" href="https://www.linkedin.com/in/hadeel-elbitar-28976a15/" target="_blank" rel="noopener">LinkedIn ↗</a>
         <a class="btn" href="https://github.com/HadeelElbitar" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn" href="Hadeel-Elbitar-Resume.pdf" download>Résumé (PDF) ↓</a>
       </div>
     </section>
   </div>
@@ -822,7 +828,7 @@
     $("#d-title").textContent = cur.name;
     $("#d-role").textContent = cur.role;
     $("#d-sum").textContent = cur.sum;
-    $("#d-impact").innerHTML = cur.impact.map(([b, t]) => `<span><b>${b}</b>${t}</span>`).join("");
+    $("#d-impact").innerHTML = (cur.live || cur.impact).map(([b, t], i) => `<span>${cur.live && i < 2 ? `<i class="live-dot"></i>` : ""}<b>${b}</b>${t}</span>`).join("");
     $("#d-steps").innerHTML = cur.steps.map(s => `<li>${s}</li>`).join("");
     $("#d-more").innerHTML = (cur.more || []).map(([t, h]) => `<a href="${h}" target="_blank" rel="noopener">${t}</a>`).join("");
     $("#disclaimer").textContent = cur.real
@@ -839,6 +845,14 @@
     if (!quiet) try { history.replaceState(null, "", "#" + id); } catch (e) {}   // only when a visitor picks a product
     if (scroll) $("#products").scrollIntoView({ behavior: "smooth" });
   }
+
+  // Live Readoactive usage from its public stats endpoint; if it isn't there (or fails), the static chips stay.
+  fetch("https://readoactive.app/v1/public/stats", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(d => {
+    if (!d || !(d.books_captured > 0) || !(d.videos_processed > 0)) return;
+    const ra = P.find(p => p.id === "readoactive"), n = x => x.toLocaleString("en-US");
+    ra.live = [[n(d.books_captured), " books captured"], [n(d.videos_processed), " videos processed"], ...ra.impact.slice(1)];
+    if (cur === ra) $("#d-impact").innerHTML = ra.live.map(([b, t], i) => `<span>${i < 2 ? `<i class="live-dot"></i>` : ""}<b>${b}</b>${t}</span>`).join("");
+  }).catch(() => {});
 
   const label = p => ({ aad: "Azure AD consent", families: "Parental controls", powerbi: "Power BI", taxes: "Cash App Taxes" })[p.id] || p.name;
   $("#chips").innerHTML = P.map(p => `<button class="chip" role="tab" data-id="${p.id}"><span class="badge">${p.badge}</span>${label(p)}</button>`).join("");
