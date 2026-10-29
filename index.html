@@ -297,6 +297,14 @@
   .post h3 { font: 400 24px/1.2 var(--serif); margin: 0 0 10px; letter-spacing: -.01em; }
   .post p { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
   .post .r { margin-top: auto; font-size: 14px; font-weight: 500; color: var(--accent); }
+  .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
+  .quote { margin: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 24px 26px; display: flex; flex-direction: column; }
+  .quote blockquote { margin: 0 0 18px; font: 400 19px/1.45 var(--serif); }
+  .quote blockquote::before { content: "\201C"; display: block; font: 400 44px/.6 var(--serif); color: var(--accent); margin-bottom: 10px; }
+  .quote figcaption { margin-top: auto; font-size: 14px; color: var(--muted); }
+  .quote figcaption b { display: block; color: var(--ink); font-weight: 600; }
+  .quotes-src { margin: 12px 0 0; font-size: 13px; color: var(--faint); }
+  .quotes-src a { color: inherit; }
   .tl-card .jump a { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500; text-decoration: none; }
   .tl-card .jump a:hover { border-color: var(--ink); }
   .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -320,6 +328,7 @@
     .stage { min-height: 0; padding: 28px 12px 60px; }
     .skills { grid-template-columns: repeat(2, 1fr); }
     .posts { grid-template-columns: 1fr; }
+    .quotes { grid-template-columns: 1fr; }
     .tl-card { grid-template-columns: 1fr; gap: 12px; }
   }
   @media (max-width: 640px) {
@@ -420,6 +429,17 @@
         <div class="years"><span>2012</span><span>2015</span><span>2018</span><span>2020</span><span>2023</span><span>2025</span><span>Now</span></div>
         <div class="tl-card" id="tl-card"></div>
       </div>
+      <div class="quotes">
+        <figure class="quote">
+          <blockquote>An engineer who deeply cares about Identity. She taught us (Identity novices) the core concepts and helped us to build the vision for Identity… She brings joy into the work environment and helps build the right bond between the team.</blockquote>
+          <figcaption><b>Suresh Pragada</b>Director of Engineering, Dapper Labs · managed Hadeel directly</figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote>She is passionate about the Identity space and has a deep understanding of the area. She is great at articulating her ideas, communicating them effectively and bringing everybody on the same page.</blockquote>
+          <figcaption><b>Inderjeet Kaur</b>Staff Engineer, Lyft · worked with Hadeel on Identity at Microsoft and Lyft</figcaption>
+        </figure>
+      </div>
+      <p class="quotes-src">Excerpts from <a href="https://www.linkedin.com/in/hadeel-elbitar-28976a15/details/recommendations/" target="_blank" rel="noopener">LinkedIn recommendations ↗</a></p>
     </section>
 
     <section id="writing">
