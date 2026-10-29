@@ -566,7 +566,7 @@
   /* ------------------------------------------------------------ Parental controls (ReBAC) */
   P.push({
     id: "families", name: "Parental controls for teen accounts", company: "Cash App · Authorization", years: "2020 – 2023", frame: "phone",
-    brand: "#00d64f", badge: `<span style="background:#000;font-size:18px">👪</span>`, line: "ReBAC behind sponsored teen accounts",
+    brand: "#00d64f", badge: `<span style="background:#00d64f;font-size:21px">$</span>`, line: "ReBAC behind sponsored teen accounts",
     role: "Tech Lead, Authorization Platform",
     sum: "I built Cash App's first relationship-based (ReBAC) authorization platform. It powers teen sponsorship and parental controls. Approve Emma's account, flip her controls, then ask the policy engine a question.",
     impact: [["1st", " ReBAC platform at Cash App"], ["Parental controls", ""], ["Teen sponsorship", ""]],
@@ -575,6 +575,7 @@
     init() { this.s = 0; this.on = { btc: false, stocks: true }; this.limit = 100; this.contacts = true; this.sheet = false; this.q = null; },
     view() {
       if (this.s === 0) return `${status(false)}<div class="ca" style="background:radial-gradient(120% 70% at 20% 10%, #c9f7cf 0%, #6ee08a 35%, #2cbf6b 60%, #9bd7f0 100%);justify-content:center;align-items:center">
+          <div class="ca-logo" style="position:absolute;top:58px;left:22px">$</div>
           <div class="fade" style="background:#fff;border-radius:26px;padding:22px 20px;width:100%;box-shadow:0 20px 40px rgba(0,0,0,.15)">
             <div style="position:relative;width:46px;height:46px;margin-bottom:12px"><div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#f6c39b,#c9774a);display:grid;place-items:center;color:#fff;font-weight:700;font-size:19px">E</div><span style="position:absolute;right:-4px;bottom:-2px;background:#000;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;display:grid;place-items:center;border:2px solid #fff">★</span></div>
             <div style="font-size:24px;font-weight:500;letter-spacing:-.035em;line-height:1.12;margin-bottom:6px">Review and approve Emma's account</div>
