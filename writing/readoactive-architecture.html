@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Readoactive is built · Hadeel Elbitar</title>
+<meta name="description" content="The architecture behind Readoactive, my AI book tracker: from a shared video to books on your shelf, one contract behind every API and MCP tool, and how one person ships it safely every day.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How Readoactive is built">
+<meta property="og:description" content="From a shared video to books on your shelf: one box, one contract, and every model call accounted for.">
+<meta property="og:url" content="https://hadeelelbitar.com/writing/readoactive-architecture.html">
+<meta property="og:image" content="https://hadeelelbitar.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hadeel Elbitar, Senior Staff Software Engineer. I build the moment you sign in, and everything it unlocks.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="article.css?v=3">
+<script data-goatcounter="https://hadeelelbitar.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<style>
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 12px; }
+  .stats div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; font-size: 13px; line-height: 1.4; color: var(--muted); }
+  .stats b { display: block; font: 400 28px/1.1 var(--serif); color: var(--ink); margin-bottom: 4px; }
+  .live { font: 13px var(--mono); color: var(--faint); margin: 0 0 36px; min-height: 1.6em; }
+  .live i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); margin-right: 8px; vertical-align: 1px; }
+
+  .arch { display: grid; gap: 0; }
+  .layer { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: stretch; }
+  .layer > span { font: 500 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--faint); padding-top: 12px; }
+  .nodes { display: grid; grid-template-columns: repeat(var(--n), 1fr); gap: 8px; }
+  .link { grid-column: 2; text-align: center; color: var(--faint); font: 12px/1 var(--mono); padding: 5px 0; }
+  .node { text-align: left; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 12px; padding: 10px 12px; cursor: pointer; font: inherit; display: flex; flex-direction: column; justify-content: flex-start; transition: opacity .2s, border-color .2s, background .2s; }
+  .node b { display: block; font: 600 14px/1.3 var(--sans); }
+  .node small { display: block; font-size: 12px; line-height: 1.35; color: var(--muted); margin-top: 3px; }
+  .node:hover { border-color: var(--accent); }
+  .node.on { border-color: var(--accent); background: var(--accent-soft); }
+  .arch.tracing .node:not(.on) { opacity: .32; }
+  .panel { margin-top: 16px; background: var(--well); border-radius: 12px; padding: 14px 16px; min-height: 7.4em; }
+  .panel h4 { margin: 0 0 4px; font: 600 15px var(--sans); }
+  .panel p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--muted); }
+  .panel code { background: var(--surface); }
+
+  .stages { list-style: none; padding: 0; margin: 0; }
+  .stages li { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: center; padding: 10px 2px; margin: 0; border-top: 1px solid var(--line); }
+  .stages li small { grid-column: 1 / -1; font-size: 13px; color: var(--faint); line-height: 1.45; }
+  .stages li.off > span:first-child { color: var(--faint); text-decoration: line-through; text-decoration-color: var(--line); }
+  .pill.bg { background: var(--accent-soft); color: var(--accent); }
+  .pill.off { background: var(--well); color: var(--faint); }
+  .tally { margin-top: 14px; font-size: 14.5px; line-height: 1.6; color: var(--muted); }
+  .tally b { display: block; margin-top: 6px; font: 500 13px var(--mono); color: var(--ink); }
+
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .layer { grid-template-columns: 1fr; gap: 6px; }
+    .layer > span { padding-top: 0; }
+    .link { grid-column: 1; }
+    .nodes { grid-template-columns: 1fr 1fr; }
+    .nodes > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+<header class="nav"><div><a class="mark" href="../">Hadeel Elbitar</a><a class="back" href="../#writing">← All writing</a></div></header>
+
+<article>
+  <p class="kicker">ARCHITECTURE · READOACTIVE · AI PRODUCT</p>
+  <h1>How Readoactive is built</h1>
+  <p class="dek">From a shared video to books on your shelf: one box, one contract behind every API and AI tool, and every model call accounted for.</p>
+  <div class="byline"><span><b>Hadeel Elbitar</b></span><span>·</span><span>7 min read</span></div>
+
+  <div class="stats">
+    <div><b>271</b>API operations, all generated from one contract</div>
+    <div><b>170</b>of them exposed to AI assistants as MCP tools</div>
+    <div><b>1,220</b>tests, plus a browser canary, before every deploy</div>
+    <div><b>~35</b>outside data sources behind one catalog</div>
+  </div>
+  <p class="live" id="live"></p>
+
+  <p>
+    <a href="https://readoactive.app" target="_blank" rel="noopener">Readoactive</a> is the book tracker I built
+    for people who find their next read on BookTok and Reels. You share a video, and it finds every book in it,
+    matches each one to a real edition, and keeps track of series, narrators and what you can borrow free from your
+    library.
+  </p>
+  <p>
+    I'm the only engineer, so every architectural decision had to pass one test: can one person run this, change it
+    every day and sleep at night? Here's the whole system. Tap any part to see what it does, or follow a single
+    video through it.
+  </p>
+
+  <div class="fig" id="archfig">
+    <div class="seg" role="group" aria-label="Diagram mode">
+      <button type="button" data-mode="explore" aria-pressed="true">Explore the parts</button>
+      <button type="button" data-mode="trace" aria-pressed="false">Follow one video</button>
+    </div>
+    <div class="arch" id="arch"></div>
+    <div class="panel" id="panel" aria-live="polite"></div>
+    <div class="ctrl" id="tracectl" hidden>
+      <button type="button" id="prev">← Back</button>
+      <button type="button" id="next">Next →</button>
+      <span id="stepn"></span>
+    </div>
+    <p class="cap">The production system. Everything except the clients, Claude, Whisper and the data sources runs on a single Ubuntu server.</p>
+  </div>
+
+  <h2>One box, on purpose</h2>
+  <p>
+    The whole thing runs on one server: Caddy in front, the API, a background worker, and Postgres. No Kubernetes,
+    no message broker, no Redis. Background jobs are rows in a Postgres table, so a capture that's halfway done
+    survives a restart, the API can run as several processes, and there's one less system to keep alive.
+  </p>
+  <p>
+    That isn't a lack of ambition. It's the same call I'd make for a team: pick the smallest architecture that meets
+    the reliability bar, and make it easy to leave. Nothing is tied to the host. Moving means running the setup
+    script on a new machine, restoring last night's dump and pointing the domain. Backups run nightly, with a second
+    copy kept offsite.
+  </p>
+
+  <h2>One contract, three front doors</h2>
+  <p>
+    Every action in the product, from "add this book" to "join this club", is declared once in a single contract:
+    its inputs and outputs, the OAuth scopes it needs, whether it's safe to retry, whether it runs as a background job,
+    and whether AI assistants may call it. From that contract the system generates the HTTP routes the app uses and
+    the tool definitions for the <a href="https://modelcontextprotocol.io" target="_blank" rel="noopener">MCP</a>
+    server that Claude and other assistants use.
+  </p>
+  <p>
+    That's why the AI integration came almost for free, and why it's safe. An assistant signs in through the same
+    OAuth 2.1 server as the app (dynamic client registration and PKCE), gets scoped, revocable tokens, and can't reach
+    anything the contract doesn't allow. Destructive operations, like deleting a list or undoing an import, are
+    deliberately left out of MCP. With fifteen years in identity, I wasn't going to bolt auth on later.
+  </p>
+
+  <h2>Paying for the model only when it helps</h2>
+  <p>
+    Model calls are the main running cost, so the capture pipeline is built to look as little as it can. It reads the
+    caption while the video downloads, then the transcript. Frames are sampled in a background thread at the same time,
+    so they're ready if needed, but the expensive vision pass only runs when the text leaves doubt. A quick, cheap
+    look at eight frames settles most of the borderline cases. On videos where every book is said out loud, skipping
+    frames cuts the cost by about 90%.
+  </p>
+
+  <div class="fig" id="pipefig">
+    <div class="seg" role="group" aria-label="Video type">
+      <button type="button" data-v="named" aria-pressed="true">Every book said out loud</button>
+      <button type="button" data-v="cover" aria-pressed="false">A cover nobody names</button>
+      <button type="button" data-v="silent" aria-pressed="false">A silent haul</button>
+    </div>
+    <ul class="stages" id="stages"></ul>
+    <div class="tally" id="tally"></div>
+    <p class="cap">What runs for three kinds of video. The rules come straight from the pipeline's own decision code.</p>
+  </div>
+
+  <p>
+    Two more pieces keep the spending honest. Every call to Claude goes through one <strong>model gate</strong>,
+    which records what it was for, how many tokens it used, and which reader and job it served, so the admin page
+    shows exactly where the money goes. When the model is down or out of credit, the gate remembers it, shows a
+    banner, sends one email, and pauses background work for an hour instead of failing a thousand times. Captures
+    still try, and they're queued and retried rather than lost.
+  </p>
+  <p>
+    Second, a <strong>capture corpus</strong> keeps everything a capture already paid for: the transcript, every raw
+    model response, the comments and the sampled frames. When I improve extraction, I can rerun the new logic over
+    stored results instead of paying for the same videos again.
+  </p>
+
+  <h2>Shipping every day without a team to catch me</h2>
+  <p>
+    A push to main deploys, but only through a gate that refuses to ship anything it can't vouch for:
+  </p>
+  <ul>
+    <li>The full test suite, 1,220 tests, run in parallel.</li>
+    <li>A replay of 320 real library imports against a recorded catalog, which fails if any row would match a
+      different book than it did before. The nightly run does the same over every stored import and emails me when
+      a count moves.</li>
+    <li>A browser canary that drives 41 screens of the real app and fails on any broken layout.</li>
+  </ul>
+  <p>
+    The gate looks at what changed and skips the checks that change can't affect, so a copy edit ships in minutes
+    and a matcher change gets the full treatment. Deploys run one at a time, and the server is restarted through
+    socket activation, so requests wait a moment instead of failing. The same budget rules bind the AI coding agents
+    I work with: tests replay stored model results by default, and fresh model calls are capped per day.
+  </p>
+
+  <h2>The bigger takeaway</h2>
+  <ul class="takeaways">
+    <li><strong>Declare things once.</strong> One contract gave me the API, the AI tools and authorization rules that can't drift apart.</li>
+    <li><strong>Make the expensive path the exception.</strong> The cheapest signal runs first, and each costlier step has to earn its place.</li>
+    <li><strong>Never pay twice for the same answer.</strong> Keep what you've already bought, and design so you can replay it.</li>
+    <li><strong>Let the gate say no.</strong> When nobody is reviewing your pull requests, the deploy pipeline has to be the reviewer.</li>
+  </ul>
+  <p>
+    None of this is specific to books. It's how I'd want any platform to work: small enough to understand,
+    strict about access, careful with money, and safe to change on a Friday.
+  </p>
+
+  <div class="next">
+    <a href="../#products">← See Readoactive running</a>
+    <a href="scoped-sessions.html">Read: A checkout login shouldn't be able to send money →</a>
+  </div>
+</article>
+
+<footer>Opinions are my own. Readoactive is my own product; numbers are from its live code and database.</footer>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+
+  /* ---------- architecture diagram ---------- */
+  const N = {
+    pwa: ["Web app", "installable PWA, share target", "The product UI: about 7,000 lines of plain JavaScript, no framework. It installs to the home screen, receives shared links from TikTok and Instagram on Android (an iOS Shortcut does the same on iPhone), scans barcodes with the camera, and refreshes its OAuth tokens silently."],
+    mcp: ["AI assistants", "Claude and other MCP clients", "Any MCP client can connect to <code>/mcp</code>. It discovers how to sign in from <code>/.well-known/oauth-protected-resource</code>, registers itself, and signs the reader in with PKCE. A playbook teaches the assistant the capture flow, so \"add the books from this video to my pile\" works end to end."],
+    links: ["Shared pages", "lists, clubs, link previews", "Shared reading lists and invites render on the server, with proper link previews, so they look right when pasted into a chat. Invite tokens are stripped from every log line."],
+    caddy: ["Caddy", "HTTPS, compression, masked logs", "Terminates TLS and proxies to the API. During a restart it holds requests for up to 15 seconds instead of failing them; with systemd socket activation the gap is almost zero. Its log filter removes sign-in codes and invite tokens before anything is written."],
+    oauth: ["OAuth 2.1 server", "PKCE, passwordless, scopes", "The API is its own authorization server: authorization code with PKCE for every public client, passwordless email links and Google sign-in, refresh token rotation, revocation, dynamic client registration and published metadata. Every route checks the scopes its operation declares."],
+    contract: ["Domain contract", "271 operations, 30 domains", "One JSON contract declares every operation: request and response shapes, required scopes, whether it's idempotent, whether it runs as a job, and whether AI assistants may call it. Each becomes <code>POST /v1/{domain}/{operation}</code>, with validation and scope checks generated."],
+    mcpsrv: ["MCP server", "170 tools, same contract", "Generated from the same contract as the HTTP routes, so the API and the AI tools can never disagree. Destructive operations (remove a book, delete a list, undo an import) stay HTTP-only on purpose."],
+    queue: ["Job queue", "rows in Postgres", "No broker: a job is a row. Captures, imports and series lookups survive restarts, results are stored durably, and the API can run as several processes. A capture that fails because the model is down is parked and retried."],
+    worker: ["Worker", "captures, imports, nightly passes", "Runs the capture pipeline and import matching, fills in series, refreshes library availability, computes similar books, runs backups and the nightly import replay that emails me if a match ever changes."],
+    gate: ["Model gate", "every Claude call, metered", "Every model call passes through here with a purpose name. It records tokens, reader and job for the spend dashboard, and remembers outages: one banner, one email, and background passes back off for an hour."],
+    pg: ["Postgres 17", "nightly dumps + offsite copy", "Libraries, the catalog, jobs, candidate sets and the corpus index. Dumped nightly with 14 kept locally, plus a copy offsite. Restoring a dump on a new server is the whole migration plan."],
+    corpus: ["Capture corpus", "everything a capture paid for", "The fetch metadata, every comment, the timed transcript, every raw model response and the frames (at 512 px), kept verbatim. Writing to it is best effort and can never fail a capture. New extraction logic replays it without new model calls."],
+    models: ["Claude + Whisper", "transcripts: Groq, OpenAI, local", "Claude reads captions, transcripts and frames. Speech is transcribed by a hosted Whisper (Groq first, OpenAI as the fallback) and by a local Whisper model when neither answers. Platform captions skip transcription entirely."],
+    providers: ["~35 data sources", "editions, series, libraries", "Open Library and Apple Books for editions, in fallback order; Wikidata for series; OverDrive (Libby) and BiblioCommons for library availability; Hardcover for narrators; plus awards, adaptations and quotes. Each sits behind a provider interface."],
+  };
+  const L = [
+    ["Clients", ["pwa", "mcp", "links"]],
+    ["Edge", ["caddy"], "HTTPS"],
+    ["API", ["oauth", "contract", "mcpsrv"], "reverse proxy"],
+    ["Background", ["queue", "worker", "gate"], "job rows"],
+    ["Data & outside", ["pg", "corpus", "models", "providers"], ""],
+  ];
+  const T = [
+    [["pwa", "caddy"], "1 · Share a video", "You share a TikTok link to Readoactive. The app is a share target, so it opens straight on the capture screen and sends the link."],
+    [["oauth", "contract", "queue"], "2 · Queue the work", "The request carries a token scoped for capture. The operation is marked as a background job, so the API writes a job row and answers at once with an id the app can poll."],
+    [["worker", "models"], "3 · Fetch and listen", "The worker downloads the video and reads the caption while it does. Then it gets the speech: platform captions if there are any, otherwise a hosted Whisper transcript."],
+    [["worker", "gate", "models"], "4 · Read the text", "Claude reads the caption and transcript through the model gate. Meanwhile a second thread samples frames from the video, in case they're needed."],
+    [["gate", "models"], "5 · Look only if it helps", "If the text left doubt, a cheap look at eight frames decides whether the full vision pass is worth paying for. Most videos never need it."],
+    [["providers"], "6 · Match real editions", "Each title is matched to a real edition (Open Library, then Apple Books), with series from Wikidata and what's available at the reader's library."],
+    [["corpus", "pg"], "7 · Keep everything", "The transcript, every raw model response and the frames go into the corpus. The books found are stored as a candidate set, ready for review."],
+    [["pwa", "contract", "pg"], "8 · Review and save", "The app sees the job finish and shows the books. The reader picks, and they land on the shelf. Claude can run this same flow over MCP."],
+  ];
+
+  const arch = $("#arch"), panel = $("#panel");
+  arch.innerHTML = L.map(([name, ids, via], i) =>
+    (i ? `<div class="layer"><span></span><div class="link">↓${via ? " " + via : ""}</div></div>` : "") +
+    `<div class="layer"><span>${name}</span><div class="nodes" style="--n:${ids.length}">${ids.map(id =>
+      `<button type="button" class="node" data-id="${id}"><b>${N[id][0]}</b><small>${N[id][1]}</small></button>`).join("")}</div></div>`
+  ).join("");
+  const nodes = [...arch.querySelectorAll(".node")];
+  let mode = "explore", step = 0;
+
+  const show = id => {
+    nodes.forEach(n => n.classList.toggle("on", n.dataset.id === id));
+    panel.innerHTML = `<h4>${N[id][0]}</h4><p>${N[id][2]}</p>`;
+  };
+  const trace = i => {
+    step = Math.max(0, Math.min(T.length - 1, i));
+    const [ids, title, text] = T[step];
+    nodes.forEach(n => n.classList.toggle("on", ids.includes(n.dataset.id)));
+    panel.innerHTML = `<h4>${title}</h4><p>${text}</p>`;
+    $("#prev").disabled = step === 0;
+    $("#next").disabled = step === T.length - 1;
+    $("#stepn").textContent = `step ${step + 1} of ${T.length}`;
+  };
+  const setMode = m => {
+    mode = m;
+    document.querySelectorAll("#archfig .seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m));
+    arch.classList.toggle("tracing", m === "trace");
+    $("#tracectl").hidden = m !== "trace";
+    m === "trace" ? trace(0) : show("contract");
+  };
+  document.querySelectorAll("#archfig .seg button").forEach(b => b.onclick = () => setMode(b.dataset.mode));
+  nodes.forEach(n => n.onclick = () => { if (mode === "trace") setMode("explore"); show(n.dataset.id); });
+  $("#prev").onclick = () => trace(step - 1);
+  $("#next").onclick = () => trace(step + 1);
+  setMode("explore");
+
+  /* ---------- capture pipeline ---------- */
+  const S = [
+    ["Read the caption", "while the video downloads, so its books are never lost"],
+    ["Get the speech", "platform captions, or a Whisper transcript"],
+    ["Sample frames", "in a background thread, alongside the text pass"],
+    ["Text pass", "Claude reads caption + transcript"],
+    ["Quick look", "a fast model reads eight frames for titles the text missed"],
+    ["Vision pass", "Claude reads all the frames: the expensive step"],
+    ["Match editions", "catalog, series and library lookups"],
+  ];
+  const V = {
+    named: {
+      st: [["ran", "allow"], ["ran", "allow"], ["stopped early", "off"], ["ran", "allow"], ["saw nothing new", "allow"], ["skipped", "off"], ["ran", "allow"]],
+      why: "Three confident books, all said out loud. The quick look confirms nothing else is on screen, the frame reader is stopped, and the vision pass never runs.",
+      calls: "3 model calls, 1 of them on the small model",
+    },
+    cover: {
+      st: [["ran", "allow"], ["ran", "allow"], ["in background", "bg"], ["ran", "allow"], ["saw a new title", "step"], ["ran", "allow"], ["ran", "allow"]],
+      why: "The speech names two books, but the quick look reads a third title on a cover. That's enough reason to pay for the full vision pass.",
+      calls: "4 model calls, 1 of them on the small model",
+    },
+    silent: {
+      st: [["ran", "allow"], ["no speech", "off"], ["in background", "bg"], ["ran", "allow"], ["not needed", "off"], ["ran", "allow"], ["ran", "allow"]],
+      why: "No speech and a caption that names fewer than two books. The text clearly isn't enough, so the pipeline goes straight to the vision pass without a quick look.",
+      calls: "3 model calls",
+    },
+  };
+  const pipe = v => {
+    document.querySelectorAll("#pipefig .seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v));
+    $("#stages").innerHTML = S.map(([name, sub], i) => {
+      const [label, cls] = V[v].st[i];
+      return `<li class="${cls === "off" ? "off" : ""}"><span>${name}</span><span class="pill ${cls}">${label}</span><small>${sub}</small></li>`;
+    }).join("");
+    $("#tally").innerHTML = `${V[v].why}<b>${V[v].calls}</b>`;
+  };
+  document.querySelectorAll("#pipefig .seg button").forEach(b => b.onclick = () => pipe(b.dataset.v));
+  pipe("named");
+
+  /* ---------- live numbers ---------- */
+  fetch("https://readoactive.app/v1/public/stats").then(r => r.ok ? r.json() : null).then(d => {
+    if (!d) return;
+    const n = x => x.toLocaleString("en-US");
+    $("#live").innerHTML = `<i></i>Live: ${n(d.books_captured)} books found in ${n(d.videos_processed)} videos so far`;
+  }).catch(() => {});
+})();
+</script>
+</body>
+</html>

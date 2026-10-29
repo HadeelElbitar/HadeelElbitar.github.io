@@ -296,6 +296,7 @@
   .post .k { font: 500 12px var(--mono); color: var(--accent); letter-spacing: .04em; margin-bottom: 10px; }
   .post h3 { font: 400 24px/1.2 var(--serif); margin: 0 0 10px; letter-spacing: -.01em; }
   .post p { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+  .post.wide { grid-column: 1 / -1; }
   .post .r { margin-top: auto; font-size: 14px; font-weight: 500; color: var(--accent); }
   .quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px; }
   .quote { margin: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 24px 26px; display: flex; flex-direction: column; }
@@ -316,6 +317,8 @@
   .contact { background: var(--ink); color: var(--bg); border-radius: 20px; padding: 56px; margin: 80px 0 72px; }
   .contact h2 { color: var(--bg); }
   .contact p { color: color-mix(in srgb, var(--bg) 70%, var(--ink)); max-width: 52ch; margin: 0 0 28px; }
+  .contact .seeking { font: 400 24px/1.35 var(--serif); color: var(--bg); max-width: 34ch; margin: 0 0 16px; }
+  .contact .seeking span { display: block; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: color-mix(in srgb, var(--bg) 55%, var(--ink)); margin-bottom: 8px; }
   .contact .btn { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 35%, var(--ink)); }
   .contact .btn.primary { background: var(--bg); color: var(--ink); border-color: var(--bg); }
   footer { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size: 13px; color: var(--faint); }
@@ -446,7 +449,7 @@
     <section id="writing">
       <p class="sec-label">03 · Writing</p>
       <h2>How I think about the hard parts.</h2>
-      <p class="sec-intro">Case studies on decisions that shaped systems serving tens of millions of people.</p>
+      <p class="sec-intro">Case studies on decisions that shaped systems serving tens of millions of people, and a tour of the product I run on my own.</p>
       <div class="posts">
         <a class="post" href="writing/scoped-sessions.html">
           <span class="k">IDENTITY · SESSIONS · 8 MIN</span>
@@ -459,6 +462,12 @@
           <h3>Breaking up a financial monolith without stopping the money</h3>
           <p>Moving things out of a monolith is the easy part. Knowing when it's safe to let go of the old code is a different story.</p>
           <span class="r">Read the case study →</span>
+        </a>
+        <a class="post wide" href="writing/readoactive-architecture.html">
+          <span class="k">ARCHITECTURE · AI PRODUCT · 7 MIN</span>
+          <h3>How Readoactive is built</h3>
+          <p>From a shared video to books on your shelf: one box, one contract behind every API and AI tool, and every model call accounted for. With an interactive map of the whole system.</p>
+          <span class="r">Explore the architecture →</span>
         </a>
       </div>
     </section>
@@ -476,7 +485,8 @@
 
     <section id="contact" class="contact">
       <h2>Let's talk.</h2>
-      <p>Whether it's identity, security or platform architecture, I'm happy to chat. Email is the fastest way to reach me.</p>
+      <p class="seeking"><span>Next role</span>Company-wide technical leadership: setting the technical direction and architecture for an entire engineering organization.</p>
+      <p>If you're building that role, or just want to talk identity, security or platform architecture, I'm happy to chat. Email is the fastest way to reach me.</p>
       <div class="cta">
         <a class="btn primary" href="mailto:dydy.hadoola@gmail.com">dydy.hadoola@gmail.com</a>
         <a class="btn" href="https://www.linkedin.com/in/hadeel-elbitar-28976a15/" target="_blank" rel="noopener">LinkedIn ↗</a>
@@ -514,7 +524,7 @@
     sum: "Share a BookTok or Reel and Readoactive finds every book in it, matches each one to a real edition, and tracks series, narrators and what's free to borrow at your library. Everything here is the real app: a screen recording and captures of the live site.",
     impact: [["Live", " at readoactive.app"], ["5", " extraction strategies, scored"], ["OAuth 2.1", " + MCP server"]],
     steps: ["Share a TikTok or Reel link, or upload the video", "Claude reads the speech, the caption and the covers on screen", "Each title is matched to a real edition (Open Library, Apple Books), with series from Wikidata", "Picked books land in your pile, with Libby availability and series progress"],
-    more: [["Open readoactive.app ↗", "https://readoactive.app"]],
+    more: [["Open readoactive.app ↗", "https://readoactive.app"], ["How it's built →", "writing/readoactive-architecture.html"]],
     shots: [["video", "assets/hero-capture-poster.jpg", "Demo"], ["assets/ra-landing.jpg", "assets/ra-landing.jpg", "Landing"], ["assets/ra-frame-4.2.jpg", "assets/ra-frame-4.2.jpg", "Found"], ["assets/ra-frame-9.4.jpg", "assets/ra-frame-9.4.jpg", "Series"]],
     init() { this.shot = 0; },
     view() {
@@ -888,7 +898,7 @@
     $("#d-sum").textContent = cur.sum;
     $("#d-impact").innerHTML = (cur.live || cur.impact).map(([b, t], i) => `<span>${cur.live && i < 2 ? `<i class="live-dot"></i>` : ""}<b>${b}</b>${t}</span>`).join("");
     $("#d-steps").innerHTML = cur.steps.map(s => `<li>${s}</li>`).join("");
-    $("#d-more").innerHTML = (cur.more || []).map(([t, h]) => `<a href="${h}" target="_blank" rel="noopener">${t}</a>`).join("");
+    $("#d-more").innerHTML = (cur.more || []).map(([t, h]) => `<a href="${h}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ""}>${t}</a>`).join("");
     $("#disclaimer").textContent = cur.real
       ? "The real Readoactive app: a screen recording and captures of the live site."
       : "Recreated in HTML to look like the real product today. Interactive and simplified, with sample data and no internal details.";
