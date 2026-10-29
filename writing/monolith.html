@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Breaking up a financial monolith without stopping the money · Hadeel Elbitar</title>
+<meta name="description" content="Moving things out of a monolith is the easy part. Knowing when it's safe to let go of the old code is a different story. Lessons from extracting identity out of a payments monolith.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="article.css?v=3">
+</head>
+<body>
+<header class="nav"><div><a class="mark" href="../">Hadeel Elbitar</a><a class="back" href="../#writing">← All writing</a></div></header>
+
+<article>
+  <p class="kicker">CASE STUDY · IDENTITY · ARCHITECTURE</p>
+  <h1>Breaking up a financial monolith without stopping the money</h1>
+  <p class="dek">Moving things out of a monolith is the easy part. Knowing when it's safe to let go of the old code is a different story.</p>
+  <div class="byline"><span><b>Hadeel Elbitar</b></span><span>·</span><span>10 min read</span></div>
+
+  <p>
+    There's a point in a company's growth when the architecture that helped it move fast starts making everything
+    harder. For us, that architecture was a monolith.
+  </p>
+  <p>
+    To be clear, I don't think monoliths are inherently bad. Quite the opposite. When you're building a product from
+    scratch, having everything in one place is often exactly what you need. You can ship quickly, make changes without
+    coordinating across ten services, and focus on figuring out whether people even want what you're building.
+  </p>
+  <p>
+    But then the company grows. More engineers, more teams, more products, more dependencies. Suddenly a change to
+    something as simple as login shares a deployment pipeline with payments, cards, account profiles and a whole lot
+    of functionality that has nothing to do with it.
+  </p>
+  <p>
+    When you're building financial infrastructure for tens of millions of customers, the cost of getting something
+    wrong is significant. You can't exactly take a payments platform offline for a weekend because you've decided it's
+    time to clean up the architecture. So we had to figure out how to pull things apart gradually while everything kept
+    running.
+  </p>
+  <p>
+    I've spent years on this, particularly on extracting identity and access functionality from our original monolith
+    into independently owned services. One thing I've learned:
+  </p>
+  <blockquote>Breaking up a monolith is much less about moving code than it is about safely moving responsibility.</blockquote>
+
+  <h2>The monolith wasn't the problem. The coupling was.</h2>
+  <p>
+    It's easy to look at a large monolith and decide that microservices are the answer. But "let's have more services"
+    isn't a useful engineering goal.
+  </p>
+  <p>
+    The problems we were actually trying to solve were teams getting blocked by each other's changes, unrelated
+    functionality sharing deployment risk, and ownership becoming harder and harder to untangle. When everyone deploys
+    through the same pipeline, the blast radius of a mistake can extend well beyond the team that made it. And when
+    multiple teams depend on the same database and code paths, figuring out who owns what becomes its own project.
+  </p>
+  <p>
+    That's particularly uncomfortable in a financial system. Things need to be available, correct and auditable, and
+    you need to keep building new features without every change feeling like a potential incident.
+  </p>
+  <p>
+    The goal wasn't to turn one big service into fifty smaller ones. It was to let teams own and ship their
+    functionality independently, without putting everything else at risk. Microservices were just one way to get there.
+  </p>
+
+  <h2>Start somewhere you can actually own</h2>
+  <p>
+    When we started extracting functionality, we didn't begin with payments. We started with login.
+  </p>
+  <p>
+    Authentication is an interesting piece of infrastructure: almost every product depends on it, but individual
+    product teams generally don't want to own it. That made it a good candidate for a clear service boundary. One team
+    could own the login service, its APIs, its data, its operational health and its on-call.
+  </p>
+  <p>
+    Importantly, the new service had its own data storage from the beginning. That was deliberate. You can take code
+    out of a monolith, put it behind a shiny new API, give it its own deployment pipeline and call it a microservice.
+    But if it's still reading and writing the same tables as the monolith, how independent is it really? You've mostly
+    added network calls to what used to be local code.
+  </p>
+  <p>The question I kept coming back to was:</p>
+  <blockquote>Who owns this data, and who is allowed to write to it?</blockquote>
+  <p>
+    Having a single, clearly defined writer made a lot of architectural decisions easier. It also forced us to think
+    about service boundaries in terms of actual ownership rather than where the code happened to live.
+  </p>
+  <p>
+    Over time, that work expanded into separate services for login, sessions, and signup through a newer accounts
+    service. None of it happened in one big migration, which brings me to the most important part of the whole effort.
+  </p>
+
+  <h2>Don't rewrite everything. Move one thing at a time.</h2>
+  <p>
+    I have very little appetite for big-bang rewrites, especially when the thing you're rewriting moves money or lets
+    people into their accounts. There's just too much that can go wrong.
+  </p>
+  <p>
+    Instead, we approached the migration as a series of smaller, reversible changes. Each step had to work on its own.
+    If we stopped halfway through, the system still needed to be in a reasonable state. And ideally, rolling something
+    back shouldn't require another risky deployment. A few patterns came up again and again.
+  </p>
+
+  <h3>1. Move traffic at the edge</h3>
+  <p>
+    Customer-facing requests came through an edge proxy that routed traffic by endpoint path. That gave us a simple way
+    to move an API from the monolith to a new service: build the endpoint in the new service, verify it behaves
+    correctly, and change the route. If something goes wrong, revert the routing configuration. There's no need to
+    redeploy the old implementation, because it's still there, ready to receive traffic.
+  </p>
+  <p>
+    That last part matters. We didn't delete the monolith's version of an endpoint just because the new one existed.
+    Both could coexist while we gained confidence in the new path. It's not particularly exciting architecture, but it
+    makes migrations much less terrifying.
+  </p>
+
+  <h3>2. Use feature flags when routing isn't enough</h3>
+  <p>
+    Not every migration happens at the HTTP routing layer. Sometimes you're replacing an internal dependency or
+    changing which service handles a particular operation. For those cases, feature flags were incredibly useful.
+  </p>
+  <p>
+    Signup was a good example. We moved the flow to a new accounts service but kept the old implementation behind a
+    flag. For most of a year, all traffic was already going through the new path, and the old branch was still there,
+    compiled, tested and ready if we needed it.
+  </p>
+  <p>
+    That might sound excessive. Why keep code around that long when nobody is using it? Because there's a difference
+    between something working in testing, working for the first week, and working across the full range of real-world
+    behavior a large financial platform sees. Some problems only show up in unusual account states, infrequent flows,
+    or interactions between systems nobody thought to test together. Keeping a rollback path gave us time to build
+    confidence without betting everything on a single cutover.
+  </p>
+
+  <h3>3. Measure what would break before you let it break</h3>
+  <p>
+    This is probably one of my favorite patterns from the whole effort. When we started moving authorization decisions
+    into individual services, we didn't immediately start rejecting requests based on the new rules. We first ran the
+    new checks in an observe-only mode: the service would evaluate whether a request should be allowed, record the
+    result, and let the request continue as before.
+  </p>
+  <p>That let us answer questions like these without breaking anything:</p>
+  <ul>
+    <li>How many real requests would fail if we turned on enforcement?</li>
+    <li>Which endpoints were missing authorization declarations?</li>
+    <li>Were the new rules behaving differently from the old ones?</li>
+  </ul>
+  <p>
+    That's incredibly valuable when you're changing security or authorization behavior. Unit tests are great, but they
+    don't tell you how a rule will behave against the full diversity of production traffic.
+  </p>
+  <p>
+    We used comparison counters for similar reasons. At one point, a change that looked like a small cleanup turned out
+    to behave differently from the existing implementation. The counters caught the disagreement. Without them, we could
+    have quietly changed which risk rules applied to certain requests, and that's exactly the kind of bug you don't want
+    to discover through customer impact.
+  </p>
+  <p>
+    Before you change behavior, find a way to measure the difference between what the system does today and what you're
+    proposing it should do. It's much easier to make a confident decision when you can see the impact before you apply it.
+  </p>
+
+  <h3>4. Delete the old code when you have proof, not when you're tired of looking at it</h3>
+  <p>
+    Eventually you do need to remove the old implementation. Otherwise you're just accumulating two versions of
+    everything forever. But deleting code too early can turn a successful migration into an incident.
+  </p>
+  <p>
+    For signup, we didn't remove the old path just because the flag had been at 100% for a while. We looked at traffic.
+    We verified that the monolith's endpoint hadn't received any for months, and we searched for remaining callers. Only
+    then did we remove the old branch, the flag and the code that existed solely to support them. The monolith's
+    endpoint was removed that same week.
+  </p>
+  <p>
+    That's how I think about deletion: not as cleanup you do when you have spare time, but as the final, evidence-backed
+    step of the migration.
+  </p>
+  <blockquote>You're not really done moving something until you've proven that nothing needs the old path anymore.</blockquote>
+
+  <div class="fig" id="ph">
+    <svg viewBox="0 0 640 230" width="100%" role="img" aria-label="Decomposition phases diagram" id="dg"></svg>
+    <p class="phase-title" id="pt"></p>
+    <p class="phase-desc" id="pd"></p>
+    <div class="ctrl"><button id="prev">← Back</button><button id="nx">Next →</button><span id="pc"></span></div>
+    <div class="cap">Put together: the general shape of moving one capability out. It's simplified, and it isn't a map of any real system.</div>
+  </div>
+
+  <h2>Testing gets more interesting when the thing you're migrating is login</h2>
+  <p>
+    A bug in most systems might mean an error message or a failed operation. A bug in authentication might mean someone
+    can't get into their account. Or worse, someone gets access they shouldn't have. So we were particularly careful
+    about validating the identity migrations.
+  </p>
+  <p>
+    One technique we relied on was continuous synthetic traffic: low-volume tests exercising login endpoints in staging,
+    with dedicated dashboards and alerts. The idea was to catch dependency changes, unexpected failures or behavioral
+    drift before they reached a customer-facing flow.
+  </p>
+  <p>
+    We also spent a lot of time watching what happened after traffic had fully moved. And I mean a lot of time. It's
+    tempting to see a flag at 100% and declare victory, but having all traffic on the new path is only one milestone.
+    You still need to understand the long-tail cases, verify that nobody is quietly depending on the old
+    implementation, and make sure the new service behaves correctly over time.
+  </p>
+  <p>
+    The old path stays available until the evidence says it's safe to remove. That isn't glamorous, but neither is
+    explaining why thousands of people suddenly can't log in.
+  </p>
+
+  <h2>Years later, the monolith is still there</h2>
+  <p>
+    Here's something we don't talk about enough in migration stories: the monolith doesn't just disappear. Not quickly,
+    anyway.
+  </p>
+  <p>
+    Years after we started extracting login, plenty of services still depended on the original monolith. Some endpoints
+    had moved, but their old implementations still existed. Some data was temporarily written in more than one place
+    while ownership transitioned. Some parts of the original codebase that hadn't been touched in years were only
+    recently being removed.
+  </p>
+  <p>
+    And that's okay. There's a tendency to treat architecture migrations as binary: either you've moved to
+    microservices or you haven't. That's not what these efforts look like in practice, especially at a large company
+    with years of existing functionality and millions of customers depending on it. You end up in an in-between state
+    for a long time.
+  </p>
+  <p>
+    What matters is being honest about that state. If an endpoint is served by the new service but the old
+    implementation still exists, say so. If a service still depends on the monolith for some operations, track those
+    dependencies. If data ownership hasn't fully transitioned, don't pretend it has.
+  </p>
+  <blockquote>"Mostly migrated, with these dependencies remaining" is useful information. "Migration complete" when there's still a hidden fallback path is not.</blockquote>
+  <p>I'd much rather have an accurate picture of an imperfect architecture than a clean diagram that doesn't reflect reality.</p>
+
+  <h2>The part nobody puts in the architecture diagrams</h2>
+  <p>
+    There's another side to this work I didn't fully appreciate at first. A migration that takes years isn't something
+    one engineer, or even one team, can carry alone. People change teams. Priorities shift. New products appear. The
+    engineers who designed a system might not even be around anymore. If the migration depends on one person knowing how
+    everything fits together, it will eventually stall.
+  </p>
+  <p>
+    So a big part of the work became helping other engineers own individual migrations. Not just handing them a list of
+    endpoints to move, but helping them understand the approach:
+  </p>
+  <ul>
+    <li>How do you choose the right cutover mechanism?</li>
+    <li>When should you use routing, and when a feature flag?</li>
+    <li>How do you introduce an observe-only check?</li>
+    <li>Which metrics tell you it's safe to enforce a new rule?</li>
+    <li>What evidence do you need before deleting the old implementation?</li>
+  </ul>
+  <p>
+    Once teams understood those patterns, they could apply them to their own services without reinventing the process
+    every time. That's when the effort really starts to scale: not when one person gets faster at moving endpoints, but
+    when other engineers can confidently own a migration end to end.
+  </p>
+  <p>
+    To me, that's as much an engineering leadership problem as an architecture one. You need a technical strategy that's
+    safe enough to repeat, and a way to share that knowledge so the work doesn't depend on the same people forever.
+  </p>
+
+  <h2>What I'd do the same way again</h2>
+  <ul class="takeaways">
+    <li><strong>Start with ownership, not architecture diagrams.</strong> Pick a capability one team can genuinely own end to end. Clear ownership makes a service boundary far more meaningful than splitting code into smaller repositories.</li>
+    <li><strong>Make rollback boring.</strong> If something goes wrong, you want a routing change or a feature flag, not an emergency deployment of code you haven't run in months.</li>
+    <li><strong>Observe before enforcing.</strong> Whether you're changing authorization behavior, risk decisions or service dependencies, measuring what would change before you change it is one of the most useful tools you have.</li>
+    <li><strong>Don't confuse 100% of traffic with done.</strong> Traffic on the new service doesn't mean the old one is no longer needed. Prove it's unused, then delete it.</li>
+    <li><strong>Be honest about what's left.</strong> Migrations are rarely clean or linear. An accurate picture of what has moved, what hasn't and why is worth far more than declaring success early.</li>
+    <li><strong>Make the process repeatable by other engineers.</strong> If every migration needs the original architect, you've created another bottleneck. The patterns should be clear and safe enough for other teams to own.</li>
+  </ul>
+
+  <h2>The bigger takeaway</h2>
+  <p>
+    After all this time, I don't think the most interesting part of decomposing a monolith is the architecture you end
+    up with. It's everything you learn about the system along the way. You discover dependencies nobody knew existed.
+    You find old contracts that are still very much alive. You realize that an endpoint nobody thinks is used is, in
+    fact, being called by something important. And you learn that safely removing functionality takes as much
+    engineering discipline as building it in the first place.
+  </p>
+  <p>
+    The work is incremental, sometimes frustrating, and occasionally feels like very little progress. But over time,
+    teams gain clearer ownership. Deployments become more independent. Changes get easier to reason about. And the
+    original monolith slowly becomes less central to everything, all while the platform keeps running and people keep
+    moving their money. Which was the whole point.
+  </p>
+  <p>
+    The goal was never to get rid of the monolith just so we could say we did. It was to build a system that could keep
+    growing without every team and every change depending on the same piece of code.
+  </p>
+  <blockquote>Sometimes the most successful architecture migration is the one customers never notice.</blockquote>
+
+  <div class="next">
+    <a href="scoped-sessions.html">← A checkout login shouldn't be able to send money</a>
+    <a href="../#career">See the career timeline →</a>
+  </div>
+</article>
+<footer>© 2026 Hadeel Elbitar · Opinions are my own and don't describe any company's internal systems.</footer>
+
+<script>
+(() => {
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const P = [
+    ["1 · The starting point", "Every capability lives in one codebase on one shared database. Teams ship through the same pipeline."],
+    ["2 · Route at the edge", "Callers reach the capability through a per-path route, so where the work happens can change with a config change."],
+    ["3 · Build the new service, count before you enforce", "The new service gets its own data store and runs next to the old path. Counters show where the two disagree before anything depends on it."],
+    ["4 · Move the traffic, then hold", "The route or flag sends all traffic to the new service, which is now the single writer for its data. The old path stays warm while the long tail surfaces."],
+    ["5 · Delete with evidence, then repeat", "Months of zero traffic and no remaining callers justify removing the old path. Then the playbook runs on the next seam."],
+  ];
+  let i = 0;
+  const box = (x, y, w, h, label, kind, sub) => {
+    const fill = { old: css("--well"), new: css("--accent-soft"), ghost: "transparent" }[kind];
+    const stroke = kind === "new" ? css("--accent") : css("--line");
+    const dash = kind === "ghost" ? 'stroke-dasharray="5 5"' : "";
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="${fill}" stroke="${stroke}" stroke-width="1.5" ${dash}/>
+      <text x="${x + w / 2}" y="${y + h / 2 + (sub ? -2 : 5)}" text-anchor="middle" font-size="14" font-weight="600" fill="${kind === "ghost" ? css("--faint") : css("--ink")}">${label}</text>
+      ${sub ? `<text x="${x + w / 2}" y="${y + h / 2 + 16}" text-anchor="middle" font-size="11.5" fill="${css("--faint")}">${sub}</text>` : ""}`;
+  };
+  const arrow = (x1, y1, x2, y2, on) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${on ? css("--accent") : css("--faint")}" stroke-width="${on ? 2.5 : 1.5}" marker-end="url(#a${on ? 1 : 0})" ${on ? "" : 'stroke-dasharray="4 4"'}/>`;
+  function draw() {
+    const defs = `<defs>${[0, 1].map(k => `<marker id="a${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${k ? css("--accent") : css("--faint")}"/></marker>`).join("")}</defs>`;
+    let s = defs + box(10, 85, 110, 60, "Callers", "old", "apps & APIs");
+    if (i === 0) {
+      s += arrow(122, 115, 248, 115, true) + box(250, 30, 260, 170, "Monolith", "old", "payments · ledger · limits · …");
+    } else {
+      s += box(170, 85, 100, 60, "Edge", "new", "routes per path") + arrow(122, 115, 168, 115, true);
+      const oldOn = i <= 3, newOn = i >= 3;
+      s += box(330, 20, 290, 90, i >= 4 ? "Old code path removed" : "Monolith", i >= 4 ? "ghost" : "old", i >= 4 ? "" : "everything else");
+      s += i >= 2 ? box(330, 130, 290, 80, "New service", "new", i >= 3 ? "single writer for its data" : "own data · counted, not trusted") : "";
+      s += arrow(272, 105, 328, 70, oldOn && i < 4);
+      if (i >= 2) s += arrow(272, 125, 328, 165, newOn);
+      if (i === 2) s += `<text x="475" y="124" text-anchor="middle" font-size="11.5" fill="${css("--accent")}">⇅ counters compare</text>`;
+    }
+    document.getElementById("dg").innerHTML = s;
+    document.getElementById("pt").textContent = P[i][0];
+    document.getElementById("pd").textContent = P[i][1];
+    document.getElementById("pc").textContent = `${i + 1} / ${P.length}`;
+    document.getElementById("prev").disabled = i === 0;
+    document.getElementById("nx").disabled = i === P.length - 1;
+  }
+  document.getElementById("prev").onclick = () => { i = Math.max(0, i - 1); draw(); };
+  document.getElementById("nx").onclick = () => { i = Math.min(P.length - 1, i + 1); draw(); };
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+  draw();
+})();
+</script>
+</body>
+</html>

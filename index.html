@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
 <meta property="og:title" content="Hadeel Elbitar · Senior Staff Software Engineer">
 <meta property="og:description" content="Identity, authentication and platform products at Cash App, Lyft and Microsoft. Try them live.">
-<meta property="og:url" content="https://hadeelelbitar.github.io/">
+<meta property="og:url" content="https://hadeelelbitar.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -284,6 +284,15 @@
   .tl-card .jump button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500; }
   .tl-card .jump button:hover { border-color: var(--ink); }
 
+  .posts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .post { display: flex; flex-direction: column; text-decoration: none; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 24px 26px; transition: transform .15s, border-color .15s; }
+  .post:hover { transform: translateY(-3px); border-color: var(--ink); }
+  .post .k { font: 500 12px var(--mono); color: var(--accent); letter-spacing: .04em; margin-bottom: 10px; }
+  .post h3 { font: 400 24px/1.2 var(--serif); margin: 0 0 10px; letter-spacing: -.01em; }
+  .post p { color: var(--muted); margin: 0 0 18px; font-size: 15px; }
+  .post .r { margin-top: auto; font-size: 14px; font-weight: 500; color: var(--accent); }
+  .tl-card .jump a { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 500; text-decoration: none; }
+  .tl-card .jump a:hover { border-color: var(--ink); }
   .skills { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   .sk { border: 1px solid var(--line); border-radius: 14px; padding: 18px; background: var(--surface); }
   .sk h4 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
@@ -304,6 +313,7 @@
     .detail { border-left: 0; border-top: 1px solid var(--line); padding: 26px 22px; }
     .stage { min-height: 0; padding: 28px 12px 60px; }
     .skills { grid-template-columns: repeat(2, 1fr); }
+    .posts { grid-template-columns: 1fr; }
     .tl-card { grid-template-columns: 1fr; gap: 12px; }
   }
   @media (max-width: 640px) {
@@ -330,6 +340,7 @@
       <ul>
         <li><a href="#products">Products</a></li>
         <li><a href="#career">Career</a></li>
+        <li><a href="#writing">Writing</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#contact">Contact</a></li>
         <li><a class="cv" href="Hadeel-Elbitar-Resume.pdf" download>Résumé ↓</a></li>
@@ -405,8 +416,28 @@
       </div>
     </section>
 
+    <section id="writing">
+      <p class="sec-label">03 · Writing</p>
+      <h2>How I think about the hard parts.</h2>
+      <p class="sec-intro">Case studies on decisions that shaped systems serving tens of millions of people.</p>
+      <div class="posts">
+        <a class="post" href="writing/scoped-sessions.html">
+          <span class="k">IDENTITY · SESSIONS · 8 MIN</span>
+          <h3>A checkout login shouldn't be able to send money</h3>
+          <p>Why being logged in shouldn't mean having access to everything, and what it took to make hundreds of endpoints respect that.</p>
+          <span class="r">Read the case study →</span>
+        </a>
+        <a class="post" href="writing/monolith.html">
+          <span class="k">IDENTITY · ARCHITECTURE · 10 MIN</span>
+          <h3>Breaking up a financial monolith without stopping the money</h3>
+          <p>Moving things out of a monolith is the easy part. Knowing when it's safe to let go of the old code is a different story.</p>
+          <span class="r">Read the case study →</span>
+        </a>
+      </div>
+    </section>
+
     <section id="skills">
-      <p class="sec-label">03 · Skills</p>
+      <p class="sec-label">04 · Skills</p>
       <h2>Toolbox</h2>
       <div class="skills">
         <div class="sk"><h4>Identity &amp; Security</h4><div class="tags"><span class="tag">OAuth 2.x</span><span class="tag">OIDC</span><span class="tag">FIDO2</span><span class="tag">Passkeys</span><span class="tag">PKCE</span><span class="tag">JWT</span><span class="tag">ReBAC</span><span class="tag">SSO</span><span class="tag">MFA</span></div></div>
@@ -875,9 +906,9 @@
       b: ["Led identity integration after the Motivate acquisition, migrating millions of bike-share riders with zero disruption.", "Designed login and account federation across multiple mobility apps.", "Shaped the next-generation identity strategy with product and security."] },
     { k: "id", org: "Cash App", team: "Identity & Authentication", y: "2020 – 2023", span: 3, c: "#00a63e", where: "Remote", demos: ["taxes", "families"],
       b: ["Introduced OAuth2, OIDC, FIDO and passkeys to Cash App.", "Delivered IRS- and NIST-compliant login for Cash App Taxes.", "Built the first ReBAC authorization platform, for parental controls and teen sponsorship.", "Led quarterly planning for the Identity org."] },
-    { k: "fin", org: "Cash App", team: "Financial Platform", y: "2023 – 2025", span: 2, c: "#008a34", where: "Remote", demos: [],
+    { k: "fin", org: "Cash App", team: "Financial Platform", y: "2023 – 2025", span: 2, c: "#008a34", where: "Remote", demos: [], reads: [["Breaking up a financial monolith", "writing/monolith.html"]],
       b: ["Drove decomposition of the financial monolith into microservices, improving developer velocity by 30%.", "Defined the multi-year infrastructure modernization strategy.", "Championed reliability practices that reduced incidents across core payment services.", "Developed future tech leads across teams."] },
-    { k: "core", org: "Cash App", team: "Core Experiences", y: "2025 – now", span: 1.6, c: "#006e29", where: "Remote", demos: [],
+    { k: "core", org: "Cash App", team: "Core Experiences", y: "2025 – now", span: 1.6, c: "#006e29", where: "Remote", demos: [], reads: [["Scoped sessions case study", "writing/scoped-sessions.html"]],
       b: ["Led migration of 30%+ of web traffic to a new stack, reducing downtime by 25%.", "Launched secure web login for Afterpay Checkout.", "Implemented Scoped Sessions across Cash APIs.", "Set session-management standards that improved release quality by 20%."] },
   ];
   $("#tl-bar").innerHTML = T.map(t => `<button class="seg" role="tab" data-k="${t.k}" style="flex:${t.span};background:${t.c}">${t.org}<small>${t.team}</small></button>`).join("");
@@ -886,7 +917,7 @@
     $$(".seg").forEach(s => s.setAttribute("aria-selected", s.dataset.k === k));
     $("#tl-card").innerHTML = `<div class="when"><strong>${t.org}</strong>${t.team}<br>${t.y} · ${t.where}</div>
       <div class="fade"><ul>${t.b.map(x => `<li>${x}</li>`).join("")}</ul>
-      <div class="jump">${t.demos.map(d => `<button data-demo="${d}">Try ${label(P.find(p => p.id === d))} →</button>`).join("")}</div></div>`;
+      <div class="jump">${t.demos.map(d => `<button data-demo="${d}">Try ${label(P.find(p => p.id === d))} →</button>`).join("")}${(t.reads || []).map(([r, h]) => `<a href="${h}">Read: ${r} →</a>`).join("")}</div></div>`;
   }
   $("#tl-bar").addEventListener("click", e => { const s = e.target.closest(".seg"); if (s) tl(s.dataset.k); });
   $("#tl-card").addEventListener("click", e => { const b = e.target.closest("[data-demo]"); if (b) select(b.dataset.demo, true); });

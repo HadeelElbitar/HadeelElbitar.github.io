@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A checkout login shouldn't be able to send money · Hadeel Elbitar</title>
+<meta name="description" content="Why being logged in shouldn't mean having access to everything: applying least privilege to first-party sessions, and what it took to make hundreds of endpoints respect it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="article.css?v=3">
+</head>
+<body>
+<header class="nav"><div><a class="mark" href="../">Hadeel Elbitar</a><a class="back" href="../#writing">← All writing</a></div></header>
+
+<article>
+  <p class="kicker">CASE STUDY · IDENTITY · SESSIONS</p>
+  <h1>A checkout login shouldn't be able to send money</h1>
+  <p class="dek">Why we had to rethink what being logged in actually means.</p>
+  <div class="byline"><span><b>Hadeel Elbitar</b></span><span>·</span><span>8 min read</span></div>
+
+  <p>
+    Most apps have a pretty simple idea of authentication. You log in, we know who you are, and you get access to your
+    account. Simple enough, right?
+  </p>
+  <p>
+    Except that model starts falling apart the moment you let people log in from places other than your own app.
+  </p>
+  <p>
+    We ran into exactly this problem when we started supporting checkout flows where someone could pay with our app
+    directly from a merchant's website. Think about it. You're shopping online, you choose to pay with a payments app,
+    and you log in through a browser to approve the purchase. All you really need to do is approve that one transaction.
+  </p>
+  <p>
+    But traditionally, the session you'd get after logging in was the same kind of session you'd get on your own phone.
+    One that could send money, manage bank accounts, change security settings, or reach pretty much anything else your
+    account supports. That's a lot of power to hand to a browser session that only needed to approve a checkout.
+  </p>
+  <p>That's the problem we set out to solve.</p>
+
+  <h2>Being authenticated shouldn't mean having access to everything</h2>
+  <p>The way I think about it, authentication and authorization answer two very different questions.</p>
+  <div class="pair">
+    <div><span>Authentication</span>Who are you?</div>
+    <div><span>Authorization</span>What are you allowed to do?</div>
+  </div>
+  <p>
+    We've been pretty good at separating the two for third-party applications. OAuth scopes exist for exactly this
+    reason: you give an external app access to your account, but only to the specific things it needs.
+  </p>
+  <p>
+    For some reason, we tend to forget that distinction with our own applications. It's our app, our login, our API.
+    Why wouldn't we trust it?
+  </p>
+  <p>
+    Because not every login happens in the same context. A session created on your personal phone, inside an app you
+    use every day, is very different from one created in a browser during checkout on a merchant's website, even if
+    it's the exact same person logging in.
+  </p>
+  <p>
+    If that checkout session gets stolen, phished or left open somewhere, the damage it can do should be limited to
+    what it was created for.
+  </p>
+  <blockquote>A checkout session should be able to complete checkout. Not send money to a stranger. Not link a new bank account. Not buy crypto.</blockquote>
+  <p>A reasonable expectation, but not one traditional first-party sessions enforce.</p>
+
+  <h2>Enter Scoped Sessions</h2>
+  <p>
+    The idea was straightforward: instead of giving every login full access, give each session only the permissions it
+    actually needs. We called this Scoped Sessions.
+  </p>
+  <p>
+    It's similar to OAuth scopes, with one important difference. We didn't want every client deciding which
+    permissions to request. That would add complexity, make auditing harder, and let clients ask for access they
+    shouldn't have. Instead, we introduced predefined tiers. The entry point chooses a tier, and the server decides
+    exactly which permissions belong to it.
+  </p>
+  <p>For example, a checkout session might have permission to:</p>
+  <ul>
+    <li>Read the account information needed for checkout.</li>
+    <li>Review and approve the current purchase.</li>
+    <li>Confirm a passcode if an additional security check is required.</li>
+  </ul>
+  <p>
+    And that's it. It doesn't get to send peer-to-peer payments, register passkeys, or reach unrelated account
+    features.
+  </p>
+
+  <div class="fig" id="cmp">
+    <div class="seg" role="group" aria-label="Session type">
+      <button aria-pressed="true" data-s="app">Full app session</button>
+      <button aria-pressed="false" data-s="checkout">Checkout session</button>
+    </div>
+    <table class="acts" id="acts"></table>
+    <div class="mono" id="tok"></div>
+    <div class="cap">Same user, same account. The tier alone changes what an API will accept. Permission and tier names here are illustrative.</div>
+  </div>
+
+  <p>
+    The API endpoints enforce those boundaries themselves. Each endpoint explicitly declares which permissions it
+    accepts from scoped sessions. And here's an important design decision: if an endpoint hasn't opted into accepting
+    scoped sessions, it requires a full session. No declaration means no scoped access.
+  </p>
+  <p>
+    Scoped sessions are also shorter-lived. A checkout session might last days rather than the months available to a
+    full app session, and more temporary flows get sessions that last only minutes.
+  </p>
+  <p>
+    And if someone needs to do something outside their session's permissions? They log in again to get a full session.
+    We deliberately didn't allow upgrading an existing scoped session into a more powerful one.
+  </p>
+  <blockquote>Same user. Same account. Different session. Different permissions.</blockquote>
+  <p>
+    Nothing particularly revolutionary about the concept. The interesting part was getting it to work in an ecosystem
+    that had never needed to think about sessions this way.
+  </p>
+
+  <h2>The easy part was designing it. The hard part was everything else.</h2>
+  <p>
+    When you introduce a new permission model into an existing system, you're not starting from scratch. You're dealing
+    with years of assumptions baked into hundreds of endpoints across dozens of services, all built around the idea that
+    a valid session is a full session. That was the real challenge.
+  </p>
+
+  <h3>1. Secure by default also means broken by default</h3>
+  <p>
+    We had two possible approaches. We could let scoped sessions access everything by default, then gradually restrict
+    the endpoints that shouldn't accept them. Or we could reject scoped sessions everywhere by default, then explicitly
+    allow them only where needed.
+  </p>
+  <p>
+    We chose the second. From a security perspective it was the obvious choice: if we missed an endpoint, access would
+    be denied instead of accidentally granted. From a product perspective, though, every endpoint we missed could break
+    a legitimate flow.
+  </p>
+  <p>And of course, we missed things.</p>
+  <p>
+    One of the first issues showed up during checkout. Depending on the account's security settings, the user might
+    need to confirm their passcode before approving a payment. The checkout session had permission to approve the
+    payment, but the passcode confirmation endpoint hadn't been configured to accept it. So the checkout flow got stuck.
+  </p>
+  <p>
+    The session was doing exactly what we'd designed it to do, and so was the API, rejecting access it hadn't been told
+    to allow. We just hadn't accounted for that dependency. The fix was simple: add a passcode confirmation permission
+    to the checkout tier and update the endpoint to accept it.
+  </p>
+  <p>
+    But it highlighted something important. A permission model isn't just about identifying the main action. You have
+    to understand every supporting action that makes the flow work, and in a system with hundreds of APIs those
+    dependencies aren't always obvious.
+  </p>
+
+  <h3>2. Backwards compatibility has a sense of humor</h3>
+  <p>
+    Another fun problem came from an existing API contract. Before Scoped Sessions, an empty list of required
+    permissions meant the caller needed full access. That behavior had been around for a while, and existing clients
+    depended on it.
+  </p>
+  <p>
+    Introduce scopes, and suddenly an empty list is ambiguous. Does it mean no permissions are required? That the
+    endpoint accepts any session? Or that full access is required? Those interpretations are very different, and
+    getting one wrong could turn into a security issue. We couldn't change what the empty list meant without breaking
+    existing behavior.
+  </p>
+  <p>
+    So instead of letting an empty array carry all that meaning, we made the authorization decision explicit in our
+    internal model, with three possible states:
+  </p>
+  <ul>
+    <li><strong>Skip the check</strong>, when authentication requirements are handled elsewhere.</li>
+    <li><strong>Require full access</strong>, which preserves the existing behavior.</li>
+    <li><strong>Require specific permissions</strong>, for endpoints that support scoped sessions.</li>
+  </ul>
+  <p>
+    We only translate that back into the older API format at the boundary. It's a small implementation detail, but
+    exactly the kind that becomes surprisingly important when you're evolving security infrastructure.
+  </p>
+  <blockquote>Sometimes the hardest part isn't implementing the new behavior. It's preserving every old behavior people forgot was a contract.</blockquote>
+
+  <h3>3. We rolled out session issuance, not enforcement</h3>
+  <p>
+    This is another decision I think worked particularly well. We didn't put authorization enforcement behind a
+    feature flag.
+  </p>
+  <p>
+    That might sound counterintuitive. Usually, when you're rolling out something this invasive, you want to be able to
+    switch it off quickly. But flagging security enforcement brings its own problems: you now have multiple
+    authorization behaviors, and you have to reason about what happens whenever the flag changes.
+  </p>
+  <p>
+    Instead, enforcement was always on. What we controlled was whether the system issued scoped sessions in the first
+    place. If no scoped sessions are being issued, full sessions keep working exactly as before. As we enabled scoped
+    session issuance for specific flows, the enforcement was already there.
+  </p>
+  <p>
+    Any rejection was a real rejection, not something that depended on whether a flag happened to be on. That made the
+    authorization logic much easier to reason about, while still giving us control over the rollout.
+  </p>
+
+  <h3>4. Checkout was only the beginning</h3>
+  <p>
+    Once the model worked for checkout, other use cases appeared. Different entry points needed different levels of
+    access. Some needed sessions that lasted days, others only minutes. Some needed a handful of permissions, others a
+    slightly broader set.
+  </p>
+  <p>
+    So the model grew. Each new entry point got a predefined tier, a fixed set of permissions and an appropriate
+    session lifetime. Across the API surface, hundreds of endpoints in dozens of services eventually needed explicit
+    permission declarations.
+  </p>
+  <p>
+    The individual changes weren't necessarily complicated. The challenge was understanding what each endpoint did,
+    how it was used, and which flows legitimately needed it. That's hard to automate away, because the question isn't
+    just technical. It's a product and security question: should a session created in this context be allowed to do
+    this? Someone has to understand the implications well enough to answer it.
+  </p>
+
+  <h2>What I'd do the same way again</h2>
+  <ul class="takeaways">
+    <li><strong>Treat first-party applications as untrusted contexts too.</strong> Being first-party doesn't mean every session deserves full access. The context a session was created in matters as much as who wrote the client.</li>
+    <li><strong>Use predefined permission tiers when the use cases are known.</strong> Letting clients assemble arbitrary scope lists is flexible, but flexibility isn't always helpful in security-sensitive systems. Fixed tiers are easier to understand, review and audit.</li>
+    <li><strong>Default to denying access, even when it's inconvenient.</strong> You're going to miss endpoints, break flows and discover dependencies nobody remembered existed. I'd much rather those mistakes show up as bugs to fix than as permissions we accidentally granted.</li>
+    <li><strong>Never overload an empty value with security meaning.</strong> If an empty list means something important, make that explicit in the type system. Don't make the next engineer guess whether <code>[]</code> means nothing, everything or something in between.</li>
+    <li><strong>Don't pretend you have step-up authentication if you don't.</strong> It would be nice to let someone elevate a scoped session after an extra verification step. But unless you've actually designed and secured that mechanism, a fresh full login is simpler and safer. Not the smoothest experience, admittedly, but one with much clearer security boundaries.</li>
+  </ul>
+
+  <h2>The bigger takeaway</h2>
+  <p>
+    What I find interesting about this project is that the core idea was almost boring. Apply least privilege to
+    sessions. Give each login only the permissions it needs. That's a principle we've been talking about forever.
+  </p>
+  <p>
+    Applying it to an established system was a different story. It meant revisiting assumptions made years earlier,
+    understanding dependencies across hundreds of APIs, dealing with backwards compatibility, and accepting that a
+    secure default would sometimes break legitimate experiences.
+  </p>
+  <p>
+    I think that's the part that gets overlooked in a lot of engineering discussions. Coming up with a better model is
+    often the easy part. Getting an entire existing system to consistently respect it, without creating new security
+    problems along the way, is where the actual engineering happens.
+  </p>
+  <blockquote>A login should prove who you are. It shouldn't automatically hand you the keys to everything.</blockquote>
+
+  <div class="next">
+    <a href="../#products">← Try the identity demos</a>
+    <a href="monolith.html">Next: Breaking up a financial monolith →</a>
+  </div>
+</article>
+<footer>© 2026 Hadeel Elbitar · Opinions are my own and don't describe any company's internal systems.</footer>
+
+<script>
+(() => {
+  const acts = [
+    ["See and approve the order", "checkout:approve", "allow", "allow"],
+    ["Read basic account details", "account:read", "allow", "allow"],
+    ["Confirm a passcode when a security setting asks", "passcode:confirm", "allow", "allow"],
+    ["Send money to someone", "payments:send", "allow", "deny"],
+    ["Register a passkey", "passkey:register", "allow", "deny"],
+    ["Anything that never declared what it accepts", "full session", "allow", "deny"],
+  ];
+  const label = { allow: "Allowed", deny: "Rejected" };
+  const tok = {
+    app: `{\n  <b>"surface"</b>: "mobile-app",\n  <b>"tier"</b>: "FULL",\n  <b>"lifetime"</b>: "months"\n}`,
+    checkout: `{\n  <b>"surface"</b>: "web:merchant-checkout",\n  <b>"tier"</b>: "CHECKOUT",\n  <b>"permissions"</b>: ["checkout:approve", "account:read", "passcode:confirm"],\n  <b>"lifetime"</b>: "days"\n}`,
+  };
+  const t = document.getElementById("acts"), m = document.getElementById("tok");
+  function show(s) {
+    document.querySelectorAll("#cmp .seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === s));
+    t.innerHTML = acts.map(([a, sc, app, co]) => { const r = s === "app" ? app : co; return `<tr><td>${a}<br><span style="font:12px var(--mono);color:var(--faint)">${sc === "full session" ? "needs a full session" : `accepts ${sc}`}</span></td><td><span class="pill ${r}">${label[r]}</span></td></tr>`; }).join("");
+    m.innerHTML = tok[s];
+  }
+  document.querySelector("#cmp .seg").addEventListener("click", e => { const b = e.target.closest("button"); if (b) show(b.dataset.s); });
+  show("app");
+})();
+</script>
+</body>
+</html>
