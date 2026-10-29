@@ -810,7 +810,7 @@
   }
   addEventListener("resize", fit);
 
-  function select(id, scroll) {
+  function select(id, scroll, quiet) {
     clearTimers();
     cur = P.find(p => p.id === id);
     stage.style.setProperty("--brand", cur.brand);
@@ -835,7 +835,7 @@
     api.thumbs();
     cur.enter?.(api);
     fit();
-    try { history.replaceState(null, "", "#" + id); } catch (e) {}
+    if (!quiet) try { history.replaceState(null, "", "#" + id); } catch (e) {}   // only when a visitor picks a product
     if (scroll) $("#products").scrollIntoView({ behavior: "smooth" });
   }
 
@@ -878,7 +878,7 @@
   tl("id");
 
   const start = location.hash.slice(1);
-  select(P.some(p => p.id === start) ? start : "readoactive");
+  select(P.some(p => p.id === start) ? start : "readoactive", false, true);
   if (P.some(p => p.id === start)) requestAnimationFrame(() => $("#products").scrollIntoView());
 })();
 </script>
