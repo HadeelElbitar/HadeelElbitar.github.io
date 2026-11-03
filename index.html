@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hadeel Elbitar</title>
-<meta name="description" content="Hadeel Elbitar, Senior Staff Software Engineer. Identity, authentication and platform products at Cash App, Lyft and Microsoft, and founder of Readoactive.">
+<title>Hadeel Elbitar | Senior Staff Engineer, Platform & Technical Leadership</title>
+<meta name="description" content="Hadeel Elbitar is a Senior Staff Software Engineer with 15+ years shaping secure platforms, distributed systems and technical strategy at Cash App, Lyft and Microsoft. Founder and engineer behind Readoactive.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
-<meta property="og:title" content="Hadeel Elbitar · Senior Staff Software Engineer">
-<meta property="og:description" content="Identity, authentication and platform products at Cash App, Lyft and Microsoft. Try them live.">
+<meta property="og:title" content="Hadeel Elbitar | Platform Architecture & Technical Leadership">
+<meta property="og:description" content="15+ years building secure, scalable platforms and helping engineering teams make better architectural decisions. See the work, case studies and the AI product I built.">
 <meta property="og:url" content="https://hadeelelbitar.com/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://hadeelelbitar.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hadeel Elbitar, Senior Staff Software Engineer. I build the moment you sign in, and everything it unlocks.">
+<meta property="og:image:alt" content="Hadeel Elbitar, Senior Staff Software Engineer and technical leader.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,6 +75,25 @@
   .badge img, .badge > span { width: 100%; height: 100%; display: grid; place-items: center; }
   .badge > span { color: #fff; }
 
+  /* Static, recruiter-friendly evidence alongside the interactive product stories. */
+  .featured { padding: 48px 0 4px; }
+  .featured .sec-intro { margin-bottom: 24px; }
+  .proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .proof-card { display: flex; flex-direction: column; gap: 10px; padding: 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); text-decoration: none; transition: transform .15s, border-color .15s; }
+  .proof-card:hover, .proof-card:focus-visible { border-color: var(--accent); transform: translateY(-2px); }
+  .proof-card .proof-tag { font: 500 12px var(--mono); letter-spacing: .04em; color: var(--accent); }
+  .proof-card h3 { font: 400 24px/1.22 var(--serif); margin: 0; }
+  .proof-card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .proof-card .proof-more { margin-top: auto; padding-top: 8px; color: var(--accent); font-size: 14px; font-weight: 600; }
+  .spotlight { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(200px, .75fr); gap: 24px; margin-top: 16px; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--accent-soft); align-items: center; }
+  .spotlight h3 { font: 400 28px/1.15 var(--serif); margin: 6px 0 12px; }
+  .spotlight p { color: var(--muted); margin: 0 0 14px; }
+  .spotlight .spotlight-links { display: flex; flex-wrap: wrap; gap: 12px 20px; font-size: 14px; font-weight: 600; }
+  .spotlight .spotlight-links a { color: var(--accent); }
+  .spotlight img { width: 100%; height: 190px; object-fit: cover; object-position: top; border-radius: 10px; border: 1px solid var(--line); }
+  .career-static { margin: 24px 0 28px; padding: 18px 22px; background: var(--accent-soft); border-radius: 12px; color: var(--muted); font-size: 14px; }
+  .career-static strong { color: var(--ink); }
+  .career-static a { color: var(--accent); font-weight: 600; }
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 40px 0 0; }
   .stat { padding: 22px 20px; border-left: 1px solid var(--line); }
   .stat:first-child { border-left: 0; padding-left: 0; }
@@ -332,10 +351,17 @@
     .skills { grid-template-columns: repeat(2, 1fr); }
     .posts { grid-template-columns: 1fr; }
     .quotes { grid-template-columns: 1fr; }
+    .proof-grid { grid-template-columns: 1fr; }
+    .spotlight { grid-template-columns: 1fr; }
+    .spotlight img { height: 230px; }
     .tl-card { grid-template-columns: 1fr; gap: 12px; }
   }
   @media (max-width: 640px) {
-    nav ul { display: none; }
+    header.nav .wrap { height: auto; min-height: 60px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 8px; }
+    header.nav nav { width: 100%; overflow-x: auto; scrollbar-width: thin; }
+    nav ul { display: flex; width: max-content; gap: 18px; padding-bottom: 4px; }
+    nav a { white-space: nowrap; }
+    section { scroll-margin-top: 115px; }
     .wrap { padding: 0 16px; }
     .stats { grid-template-columns: repeat(2, 1fr); }
     .stat { padding: 18px 0; border-left: 0; border-top: 1px solid var(--line); }
@@ -373,15 +399,17 @@
 
     <div class="hero">
       <div>
-        <p class="eyebrow">Senior Staff Software Engineer · Seattle, WA</p>
-        <h1>I build the moment you <em>sign in</em>, and everything it unlocks.</h1>
+        <p class="eyebrow">Senior Staff Software Engineer · Platform architecture · US remote</p>
+        <h1>I turn complex systems into <em>clear technical direction.</em></h1>
         <p class="lede">
-          15+ years building identity, authentication and platform products at Cash App, Lyft and Microsoft,
-          and now my own AI product, Readoactive. Pick a product and click through it.
+          15+ years building secure, scalable platforms at Cash App, Lyft and Microsoft. I make high-stakes
+          architectural decisions, create patterns other teams can ship safely, and still build products
+          myself, including Readoactive.
         </p>
         <div class="cta">
-          <a class="btn primary" href="#products">Try the products</a>
-          <a class="btn" href="Hadeel-Elbitar-Resume.pdf" download>Download résumé ↓</a>
+          <a class="btn primary" href="#impact">See the impact</a>
+          <a class="btn" href="#products">Try the products</a>
+          <a class="btn" href="Hadeel-Elbitar-Resume.pdf" download>Résumé (PDF) ↓</a>
           <a class="btn" href="mailto:dydy.hadoola@gmail.com">Get in touch</a>
         </div>
       </div>
@@ -395,10 +423,51 @@
       <div class="stat"><b>12M+</b><span>returns filed on Cash App Taxes</span></div>
     </div>
 
+    <section id="impact" class="featured" aria-labelledby="impact-title">
+      <p class="sec-label">Selected impact</p>
+      <h2 id="impact-title">Technical decisions that outlast the launch.</h2>
+      <p class="sec-intro">A few examples of the work behind the demos: safer access, migrations other teams can repeat, and an AI product I operate end to end.</p>
+      <div class="proof-grid">
+        <a class="proof-card" href="writing/scoped-sessions.html">
+          <span class="proof-tag">SECURITY · PLATFORM DESIGN</span>
+          <h3>Access should be as narrow as the job.</h3>
+          <p>Built Cash App's first relationship-based authorization platform for teen sponsorship and parental controls, and helped introduce scoped checkout sessions across Cash APIs.</p>
+          <span class="proof-more">Read the authorization case study →</span>
+        </a>
+        <a class="proof-card" href="writing/monolith.html">
+          <span class="proof-tag">MODERNIZATION · ORG ENABLEMENT</span>
+          <h3>30% faster developer velocity.</h3>
+          <p>Drove decomposition of a financial monolith into independently owned services, using reversible migrations and repeatable patterns teams could adopt.</p>
+          <span class="proof-more">Read the migration case study →</span>
+        </a>
+        <a class="proof-card" href="writing/readoactive-architecture.html">
+          <span class="proof-tag">AI PRODUCT · HANDS-ON ENGINEERING</span>
+          <h3>One engineer. A production AI system.</h3>
+          <p>Built Readoactive with 271 API operations, 170 MCP tools, and a 1,220-test deployment gate. The architecture is designed to stay maintainable by one person.</p>
+          <span class="proof-more">Explore the architecture →</span>
+        </a>
+      </div>
+      <div class="spotlight">
+        <div>
+          <span class="proof-tag">FEATURED PROJECT · READOACTIVE</span>
+          <h3>I build products, not just roadmaps.</h3>
+          <p>Readoactive turns saved BookTok videos and Reels into a searchable reading list, matches books to real editions, and checks what's available through Libby. I designed, built, launched and operate it myself.</p>
+          <div class="spotlight-links">
+            <a href="https://readoactive.app" target="_blank" rel="noopener">Try the live product ↗</a>
+            <a href="writing/readoactive-architecture.html">See the architecture →</a>
+            <a href="#products">Explore the demo →</a>
+          </div>
+        </div>
+        <a href="https://readoactive.app" target="_blank" rel="noopener" aria-label="Open Readoactive, my live AI reading app">
+          <img src="assets/ra-landing.jpg" alt="Readoactive reading app homepage" loading="lazy" width="520" height="360">
+        </a>
+      </div>
+    </section>
+
     <section id="products">
       <p class="sec-label">01 · Products</p>
       <h2>Things I've built. Go ahead, click.</h2>
-      <p class="sec-intro">Each product runs as a live demo that looks like the real thing. As you tap through, the panel beside it shows what happens under the hood.</p>
+      <p class="sec-intro">Explore what I built and the architectural decisions behind it. Readoactive is my live product; the other experiences are interactive demonstrations of work from Cash App and Microsoft. The impact summaries above are readable without using the demos.</p>
 
       <div class="chips" role="tablist" id="chips"></div>
       <div class="showcase">
@@ -426,13 +495,14 @@
 
     <section id="career">
       <p class="sec-label">02 · Career</p>
-      <h2>Fifteen years, one through-line: identity.</h2>
-      <p class="sec-intro">Pick a stretch of the timeline to see what I did there.</p>
+      <h2>From deep expertise to engineering-wide impact.</h2>
+      <p class="sec-intro">My work has moved from foundational data and identity platforms to cross-team modernization, reliability and technical strategy. Select a chapter for the decisions and outcomes.</p>
       <div class="tl">
         <div class="tl-bar" id="tl-bar" role="tablist"></div>
         <div class="years"><span>2012</span><span>2015</span><span>2018</span><span>2020</span><span>2023</span><span>2025</span><span>Now</span></div>
         <div class="tl-card" id="tl-card"></div>
       </div>
+      <p class="career-static"><strong>Recent work, at a glance:</strong> At Cash App, I helped define a multi-year financial-platform modernization strategy, drove monolith decomposition, and led migrations in Core Experiences, including scoped checkout sessions. Earlier, I worked on authentication and identity platforms at Lyft and Microsoft. <a href="writing/monolith.html">Read how I approach migrations →</a></p>
       <div class="quotes">
         <figure class="quote">
           <blockquote>An engineer who deeply cares about Identity. She taught us (Identity novices) the core concepts and helped us to build the vision for Identity… She brings joy into the work environment and helps build the right bond between the team.</blockquote>
@@ -485,8 +555,8 @@
 
     <section id="contact" class="contact">
       <h2>Let's talk.</h2>
-      <p class="seeking"><span>Next role</span>Company-wide technical leadership: setting the technical direction and architecture for an entire engineering organization.</p>
-      <p>If you're building that role, or just want to talk identity, security or platform architecture, I'm happy to chat. Email is the fastest way to reach me.</p>
+      <p class="seeking"><span>What I'm looking for</span>Principal, Senior Staff, or company-wide technical leadership roles where architecture becomes a multiplier for the whole engineering organization.</p>
+      <p>I'm interested in 100% remote, US-based opportunities across platform engineering, product architecture, distributed systems and applied AI. If that's what you're building, email is the fastest way to reach me.</p>
       <div class="cta">
         <a class="btn primary" href="mailto:dydy.hadoola@gmail.com">dydy.hadoola@gmail.com</a>
         <a class="btn" href="https://www.linkedin.com/in/hadeel-elbitar-28976a15/" target="_blank" rel="noopener">LinkedIn ↗</a>
@@ -958,7 +1028,7 @@
   }
   $("#tl-bar").addEventListener("click", e => { const s = e.target.closest(".seg"); if (s) tl(s.dataset.k); });
   $("#tl-card").addEventListener("click", e => { const b = e.target.closest("[data-demo]"); if (b) select(b.dataset.demo, true); });
-  tl("id");
+  tl("core");
 
   const start = location.hash.slice(1);
   select(P.some(p => p.id === start) ? start : "readoactive", false, true);
