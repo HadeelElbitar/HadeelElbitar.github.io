@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hadeel Elbitar | Senior Staff Engineer, Platform & Technical Leadership</title>
-<meta name="description" content="Hadeel Elbitar is a Senior Staff Software Engineer with 15+ years shaping secure platforms, distributed systems and technical strategy at Cash App, Lyft and Microsoft. Founder and engineer behind Readoactive.">
+<title>Hadeel Elbitar | Engineering, Identity & Platform Architecture</title>
+<meta name="description" content="I'm Hadeel. I've spent 15+ years building identity and platform systems at Cash App, Lyft and Microsoft. Here's what I've worked on, what I've learned, and the book app I built myself.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
-<meta property="og:title" content="Hadeel Elbitar | Platform Architecture & Technical Leadership">
-<meta property="og:description" content="15+ years building secure, scalable platforms and helping engineering teams make better architectural decisions. See the work, case studies and the AI product I built.">
+<meta property="og:title" content="Hadeel Elbitar | Engineering & Platform Architecture">
+<meta property="og:description" content="I build the parts of software other teams depend on. Identity, payments infrastructure, platform work, and a book app I built because I wanted it to exist.">
 <meta property="og:url" content="https://hadeelelbitar.com/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://hadeelelbitar.com/assets/og.png">
@@ -399,15 +399,17 @@
 
     <div class="hero">
       <div>
-        <p class="eyebrow">Senior Staff Software Engineer · Platform architecture · US remote</p>
-        <h1>I turn complex systems into <em>clear technical direction.</em></h1>
+        <p class="eyebrow">Senior Staff Software Engineer · Seattle area · Remote</p>
+        <h1>I build the parts of software <em>everyone else depends on.</em></h1>
         <p class="lede">
-          15+ years building secure, scalable platforms at Cash App, Lyft and Microsoft. I make high-stakes
-          architectural decisions, create patterns other teams can ship safely, and still build products
-          myself, including Readoactive.
+          I've spent 15+ years working on identity, payments infrastructure, and platform engineering at
+          Microsoft, Lyft, and Cash App. I like the problems where getting the architecture right is only
+          half the work. The other half is helping teams actually move to it. I also built
+          <a href="https://readoactive.app" target="_blank" rel="noopener">Readoactive</a>, because I kept
+          saving book recommendations I never went back to.
         </p>
         <div class="cta">
-          <a class="btn primary" href="#impact">See the impact</a>
+          <a class="btn primary" href="#impact">Some work I'm proud of</a>
           <a class="btn" href="#products">Try the products</a>
           <a class="btn" href="Hadeel-Elbitar-Resume.pdf" download>Résumé (PDF) ↓</a>
           <a class="btn" href="mailto:dydy.hadoola@gmail.com">Get in touch</a>
@@ -424,34 +426,34 @@
     </div>
 
     <section id="impact" class="featured" aria-labelledby="impact-title">
-      <p class="sec-label">Selected impact</p>
-      <h2 id="impact-title">Technical decisions that outlast the launch.</h2>
-      <p class="sec-intro">A few examples of the work behind the demos: safer access, migrations other teams can repeat, and an AI product I operate end to end.</p>
+      <p class="sec-label">A few projects</p>
+      <h2 id="impact-title">The problems are usually more interesting than the solutions.</h2>
+      <p class="sec-intro">Here's some of the work I keep coming back to, and why. I've linked the longer write-ups if you want the details.</p>
       <div class="proof-grid">
         <a class="proof-card" href="writing/scoped-sessions.html">
-          <span class="proof-tag">SECURITY · PLATFORM DESIGN</span>
-          <h3>Access should be as narrow as the job.</h3>
-          <p>Built Cash App's first relationship-based authorization platform for teen sponsorship and parental controls, and helped introduce scoped checkout sessions across Cash APIs.</p>
-          <span class="proof-more">Read the authorization case study →</span>
+          <span class="proof-tag">CASH APP · IDENTITY &amp; AUTHORIZATION</span>
+          <h3>Logging in shouldn't give a checkout page the keys to everything.</h3>
+          <p>I worked on scoped sessions so someone signing in to pay a merchant couldn't suddenly use that session to send money or change account settings. I also built Cash App's first relationship-based authorization platform for teen accounts.</p>
+          <span class="proof-more">How scoped sessions work →</span>
         </a>
         <a class="proof-card" href="writing/monolith.html">
-          <span class="proof-tag">MODERNIZATION · ORG ENABLEMENT</span>
-          <h3>30% faster developer velocity.</h3>
-          <p>Drove decomposition of a financial monolith into independently owned services, using reversible migrations and repeatable patterns teams could adopt.</p>
-          <span class="proof-more">Read the migration case study →</span>
+          <span class="proof-tag">CASH APP · FINANCIAL PLATFORM</span>
+          <h3>Taking apart a monolith while it was still moving money.</h3>
+          <p>I helped move functionality into services teams could own independently. There wasn't a magic rewrite. We used routing, flags, observe-only checks, and a lot of patience. The work improved developer velocity by 30%.</p>
+          <span class="proof-more">How we approached the migration →</span>
         </a>
         <a class="proof-card" href="writing/readoactive-architecture.html">
-          <span class="proof-tag">AI PRODUCT · HANDS-ON ENGINEERING</span>
-          <h3>One engineer. A production AI system.</h3>
-          <p>Built Readoactive with 271 API operations, 170 MCP tools, and a 1,220-test deployment gate. The architecture is designed to stay maintainable by one person.</p>
-          <span class="proof-more">Explore the architecture →</span>
+          <span class="proof-tag">READOACTIVE · BUILT AND RUN BY ME</span>
+          <h3>Why I built a whole book app, and run it on one server.</h3>
+          <p>Readoactive has 271 API operations, 170 MCP tools, and 1,220 tests. It's a lot for one person to look after, which is exactly why I kept the infrastructure simple.</p>
+          <span class="proof-more">See how I built it →</span>
         </a>
       </div>
       <div class="spotlight">
         <div>
-          <span class="proof-tag">FEATURED PROJECT · READOACTIVE</span>
-          <h3>I build products, not just roadmaps.</h3>
-          <p>Readoactive turns saved BookTok videos and Reels into a searchable reading list, matches books to real editions, and checks what's available through Libby. I designed, built, launched and operate it myself.</p>
+          <span class="proof-tag">MY SIDE PROJECT · READOACTIVE</span>
+          <h3>And then I built a book app.</h3>
+          <p>I had a growing pile of saved BookToks and Reels, and no idea which books were in half of them. So I built Readoactive. Share a video, it finds the books, matches the editions, and checks Libby. I handle the product, code, auth, and infrastructure myself. It's live, and yes, I still use it.</p>
           <div class="spotlight-links">
             <a href="https://readoactive.app" target="_blank" rel="noopener">Try the live product ↗</a>
             <a href="writing/readoactive-architecture.html">See the architecture →</a>
@@ -466,8 +468,8 @@
 
     <section id="products">
       <p class="sec-label">01 · Products</p>
-      <h2>Things I've built. Go ahead, click.</h2>
-      <p class="sec-intro">Explore what I built and the architectural decisions behind it. Readoactive is my live product; the other experiences are interactive demonstrations of work from Cash App and Microsoft. The impact summaries above are readable without using the demos.</p>
+      <h2>Want to see what I actually worked on?</h2>
+      <p class="sec-intro">Pick one and click around. Readoactive is my real, live app. The Cash App and Microsoft examples are simplified demos I made to explain the engineering, not copies of internal systems.</p>
 
       <div class="chips" role="tablist" id="chips"></div>
       <div class="showcase">
@@ -495,14 +497,14 @@
 
     <section id="career">
       <p class="sec-label">02 · Career</p>
-      <h2>From deep expertise to engineering-wide impact.</h2>
-      <p class="sec-intro">My work has moved from foundational data and identity platforms to cross-team modernization, reliability and technical strategy. Select a chapter for the decisions and outcomes.</p>
+      <h2>Where I've worked, and what I worked on.</h2>
+      <p class="sec-intro">I started with Power BI, spent a long time in identity, and moved into financial platform and core experiences. Pick a team to see what I did there.</p>
       <div class="tl">
         <div class="tl-bar" id="tl-bar" role="tablist"></div>
         <div class="years"><span>2012</span><span>2015</span><span>2018</span><span>2020</span><span>2023</span><span>2025</span><span>Now</span></div>
         <div class="tl-card" id="tl-card"></div>
       </div>
-      <p class="career-static"><strong>Recent work, at a glance:</strong> At Cash App, I helped define a multi-year financial-platform modernization strategy, drove monolith decomposition, and led migrations in Core Experiences, including scoped checkout sessions. Earlier, I worked on authentication and identity platforms at Lyft and Microsoft. <a href="writing/monolith.html">Read how I approach migrations →</a></p>
+      <p class="career-static"><strong>The last few years:</strong> At Cash App I've worked on splitting platform functionality out of the monolith, moving web traffic to a new stack, and making checkout sessions safer. Before that, identity work at Lyft and Microsoft. Different products, but a lot of the same questions about ownership, security, and changing things without breaking them. <a href="writing/monolith.html">Here's how I approached one migration →</a></p>
       <div class="quotes">
         <figure class="quote">
           <blockquote>An engineer who deeply cares about Identity. She taught us (Identity novices) the core concepts and helped us to build the vision for Identity… She brings joy into the work environment and helps build the right bond between the team.</blockquote>
@@ -518,8 +520,8 @@
 
     <section id="writing">
       <p class="sec-label">03 · Writing</p>
-      <h2>How I think about the hard parts.</h2>
-      <p class="sec-intro">Case studies on decisions that shaped systems serving tens of millions of people, and a tour of the product I run on my own.</p>
+      <h2>Things that were harder than they looked.</h2>
+      <p class="sec-intro">A few engineering problems I've spent time on. What we tried, what made them difficult, and what I'd do the same way again.</p>
       <div class="posts">
         <a class="post" href="writing/scoped-sessions.html">
           <span class="k">IDENTITY · SESSIONS · 8 MIN</span>
@@ -544,7 +546,7 @@
 
     <section id="skills">
       <p class="sec-label">04 · Skills</p>
-      <h2>Toolbox</h2>
+      <h2>What I work with</h2>
       <div class="skills">
         <div class="sk"><h4>Identity &amp; Security</h4><div class="tags"><span class="tag">OAuth 2.x</span><span class="tag">OIDC</span><span class="tag">FIDO2</span><span class="tag">Passkeys</span><span class="tag">PKCE</span><span class="tag">JWT</span><span class="tag">ReBAC</span><span class="tag">SSO</span><span class="tag">MFA</span></div></div>
         <div class="sk"><h4>Architecture</h4><div class="tags"><span class="tag">Distributed systems</span><span class="tag">Microservices</span><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Azure</span><span class="tag">Reliability</span></div></div>
@@ -555,8 +557,8 @@
 
     <section id="contact" class="contact">
       <h2>Let's talk.</h2>
-      <p class="seeking"><span>What I'm looking for</span>Principal, Senior Staff, or company-wide technical leadership roles where architecture becomes a multiplier for the whole engineering organization.</p>
-      <p>I'm interested in 100% remote, US-based opportunities across platform engineering, product architecture, distributed systems and applied AI. If that's what you're building, email is the fastest way to reach me.</p>
+      <p class="seeking"><span>What I'm looking for next</span>A role where I can help set the technical direction across teams, not just for one service or one project.</p>
+      <p>I'm looking at Principal, Senior Staff, and broader technical leadership roles, ideally in platform or product engineering. It needs to be 100% remote in the US. If you think there's a fit, send me an email.</p>
       <div class="cta">
         <a class="btn primary" href="mailto:dydy.hadoola@gmail.com">dydy.hadoola@gmail.com</a>
         <a class="btn" href="https://www.linkedin.com/in/hadeel-elbitar-28976a15/" target="_blank" rel="noopener">LinkedIn ↗</a>
@@ -589,9 +591,9 @@
   /* ------------------------------------------------------------ Readoactive (real) */
   P.push({
     id: "readoactive", name: "Readoactive", company: "Founder", years: "2026", frame: "phone", real: true,
-    brand: "#e4593a", badge: `<img src="assets/readoactive-icon.png" alt="">`, line: "My AI book tracker, live",
+    brand: "#e4593a", badge: `<img src="assets/readoactive-icon.png" alt="">`, line: "My book app, live",
     role: "Founder & sole engineer: product, AI, auth, infrastructure",
-    sum: "Share a BookTok or Reel and Readoactive finds every book in it, matches each one to a real edition, and tracks series, narrators and what's free to borrow at your library. Everything here is the real app: a screen recording and captures of the live site.",
+    sum: "I built Readoactive because I was tired of losing book recommendations in saved videos. Share a BookTok or Reel and it finds the books, matches editions, and shows you what's on Libby. This one isn't a mockup. The video and screenshots are from the app running today.",
     impact: [["Live", " at readoactive.app"], ["5", " extraction strategies, scored"], ["OAuth 2.1", " + MCP server"]],
     steps: ["Share a TikTok or Reel link, or upload the video", "Claude reads the speech, the caption and the covers on screen", "Each title is matched to a real edition (Open Library, Apple Books), with series from Wikidata", "Picked books land in your pile, with Libby availability and series progress"],
     more: [["Open readoactive.app ↗", "https://readoactive.app"], ["How it's built →", "writing/readoactive-architecture.html"]],
@@ -621,7 +623,7 @@
     id: "taxes", name: "Cash App Taxes sign-in & verification", company: "Cash App · Identity", years: "2020 – 2023", frame: "phone",
     brand: "#00d64f", badge: `<span style="background:#00d64f;font-size:21px">$</span>`, line: "IRS- & NIST-grade login for free filing",
     role: "Tech Lead, Identity & Authentication",
-    sum: "Free tax filing needs IRS- and NIST-grade identity assurance. I designed the sign-in and verification: Cash App login, a carrier check that rejects VoIP numbers, and one-time codes. Switch to the Google Voice number in the panel to see it get stopped.",
+    sum: "When we built sign-in for Cash App Taxes, we had to meet IRS and NIST identity requirements without making filing a tax return miserable. I worked on the login and verification flow, including carrier checks and one-time codes. Try the Google Voice number to see why a VoIP line doesn't pass.",
     impact: [["12M+", " returns filed for $0"], ["IRS", " & NIST compliant"], ["Non-VoIP", " verification"]],
     steps: ["Start filing, then log in with Cash App", "Carrier lookup: the number must be a real mobile line, not VoIP", "A one-time code proves you hold the phone", "Two factors verified, so your return unlocks"],
     more: [["cash.app/taxes ↗", "https://cash.app/taxes"], ["Press: Cash App to acquire Credit Karma Tax ↗", "https://squareup.com/us/en/press/credit-karma-tax"]],
@@ -712,7 +714,7 @@
     id: "families", name: "Parental controls for teen accounts", company: "Cash App · Authorization", years: "2020 – 2023", frame: "phone",
     brand: "#00d64f", badge: `<span style="background:#00d64f;font-size:21px">$</span>`, line: "ReBAC behind sponsored teen accounts",
     role: "Tech Lead, Authorization Platform",
-    sum: "I built Cash App's first relationship-based (ReBAC) authorization platform. It powers teen sponsorship and parental controls. Approve Emma's account, flip her controls, then ask the policy engine a question.",
+    sum: "Cash App needed a way to express things like 'this parent sponsors this teen' and turn those relationships into actual permissions. I built its first ReBAC authorization platform for that. Approve Emma's account, change a few controls, and see what the policy checks return.",
     impact: [["1st", " ReBAC platform at Cash App"], ["Parental controls", ""], ["Teen sponsorship", ""]],
     steps: ["A parent approves a teen's account, which creates a sponsor relationship", "Each control the parent sets writes a relationship tuple", "Every request asks: is there a path from this teen to this action?", "A decision in milliseconds, and every change is audited"],
     more: [["cash.app/families ↗", "https://cash.app/families"], ["Press: Introducing Approved Contacts ↗", "https://cash.app/press/introducing-approved-contacts-enhanced-parental-oversight-for-teen-p2p-transactions"]],
@@ -780,7 +782,7 @@
     id: "aad", name: "Azure AD app consent & PKCE", company: "Microsoft · Azure Active Directory", years: "2015 – 2018", frame: "browser",
     brand: "#0078d4", badge: `<span style="background:#fff">${msSquares}</span>`, line: "Consent, PKCE and on-behalf-of flows",
     role: "Senior Software Engineer, Azure AD",
-    sum: "I owned core features of Microsoft's identity platform: third-party app consent, max_age enforcement and on-behalf-of flows. I also supervised the PKCE code flow that rolled out across Microsoft. The screens follow today's Microsoft sign-in, and the PKCE values in the panel are computed live in your browser.",
+    sum: "At Microsoft, I worked on the identity platform behind app consent, max_age enforcement, and on-behalf-of flows. I also supervised the PKCE implementation that rolled out across Microsoft. The screen is a simplified version of today's sign-in flow, but the PKCE values on the right are generated in your browser.",
     impact: [["100s of M", " accounts"], ["PKCE", " across Microsoft"], ["AAD v2.0", " endpoint"]],
     steps: ["The app makes a secret code_verifier and sends only its SHA-256 hash", "The user signs in at login.microsoftonline.com", "The user approves the permissions the app asks for (consent)", "The app redeems the code with the original verifier, and the server hashes and compares it"],
     more: [["How consent works ↗", "https://learn.microsoft.com/entra/identity-platform/application-consent-experience"]],
@@ -851,7 +853,7 @@
     id: "powerbi", name: "Power BI data mashup engine", company: "Microsoft · Power BI", years: "2012 – 2015", frame: "window",
     brand: "#f2c811", badge: `<span style="background:#f2c811;color:#000"><span style="display:flex;gap:2px;align-items:flex-end;height:18px"><i style="width:3px;height:8px;background:#252423"></i><i style="width:3px;height:13px;background:#252423"></i><i style="width:3px;height:18px;background:#252423"></i></span></span>`, line: "The engine behind Power Query",
     role: "Software Engineer, Mashup Engine",
-    sum: "I worked on the data mashup engine behind Power Query and Power BI. It combines sources, records each transformation as a step in the M language, and refreshes reports automatically. Merge the targets in, expand the column, click any applied step, then hit Refresh Preview.",
+    sum: "Before identity, I worked on the data mashup engine behind Power Query and Power BI. It combines data sources and records transformations in M, then runs them again when the report refreshes. Try merging the targets table, expanding the column, and hitting Refresh Preview.",
     impact: [["Core", " of Power BI"], ["Auto-refresh", " pipelines"], ["Faster", " query execution"]],
     steps: ["Connect to sources: a SQL database and an Excel workbook", "Shape and combine them; each click becomes a step in M", "The engine folds work back to the source where it can", "Refresh re-runs every step against live data"],
     more: [["Power Query docs ↗", "https://learn.microsoft.com/power-query/"]],
@@ -970,8 +972,8 @@
     $("#d-steps").innerHTML = cur.steps.map(s => `<li>${s}</li>`).join("");
     $("#d-more").innerHTML = (cur.more || []).map(([t, h]) => `<a href="${h}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ""}>${t}</a>`).join("");
     $("#disclaimer").textContent = cur.real
-      ? "The real Readoactive app: a screen recording and captures of the live site."
-      : "Recreated in HTML to look like the real product today. Interactive and simplified, with sample data and no internal details.";
+      ? "These are captures from the actual Readoactive app."
+      : "I made this interactive example to explain the flow. It uses made-up data and doesn't show company internals.";
     $("#replay").style.visibility = cur.real ? "hidden" : "visible";
     $$(".chip").forEach(c => c.setAttribute("aria-selected", c.dataset.id === id));
     api.note(""); api.step(-1);
@@ -1006,17 +1008,17 @@
   // ------------------------------------------------------------ career timeline
   const T = [
     { k: "pbi", org: "Microsoft", team: "Power BI / Mashup Engine", y: "2012 – 2015", span: 3, c: "#7a6400", where: "Redmond", demos: ["powerbi"],
-      b: ["Built the next-generation data mashup engine at the core of Power BI.", "Delivered auto-refresh pipelines and query execution improvements.", "Partnered with PMs and architects to grow it into a foundation for Microsoft's analytics business."] },
+      b: ["Worked on the data mashup engine behind Power BI and Power Query.", "Built auto-refresh pipelines and improved query execution.", "Worked with PMs and architects as the engine became part of Microsoft's analytics platform."] },
     { k: "aad", org: "Microsoft", team: "Azure Active Directory", y: "2015 – 2018", span: 3, c: "#0067b8", where: "Redmond", demos: ["aad"],
-      b: ["Owned third-party app consent, access-token max_age enforcement and on-behalf-of flows.", "Supervised the PKCE code-flow implementation later rolled out across Microsoft.", "Helped converge consumer and enterprise identity into one SSO model (AAD v2.0)."] },
+      b: ["Owned third-party app consent, access-token max_age enforcement, and on-behalf-of flows.", "Supervised the PKCE implementation that later rolled out across Microsoft.", "Worked on bringing consumer and enterprise identity closer together in AAD v2.0."] },
     { k: "lyft", org: "Lyft", team: "Identity", y: "2018 – 2020", span: 2, c: "#c2008f", where: "Remote", demos: [],
-      b: ["Led identity integration after the Motivate acquisition, migrating millions of bike-share riders with zero disruption.", "Designed login and account federation across multiple mobility apps.", "Shaped the next-generation identity strategy with product and security."] },
+      b: ["Led the identity work after Lyft acquired Motivate, moving millions of bike-share riders without interrupting their access.", "Designed login and account federation across mobility apps.", "Worked with product and security on the next identity architecture."] },
     { k: "id", org: "Cash App", team: "Identity & Authentication", y: "2020 – 2023", span: 3, c: "#00a63e", where: "Remote", demos: ["taxes", "families"],
-      b: ["Introduced OAuth2, OIDC, FIDO and passkeys to Cash App.", "Delivered IRS- and NIST-compliant login for Cash App Taxes.", "Built the first ReBAC authorization platform, for parental controls and teen sponsorship.", "Led quarterly planning for the Identity org."] },
+      b: ["Brought OAuth2, OIDC, FIDO, and passkeys into Cash App's identity work.", "Built the login and verification approach for Cash App Taxes to meet IRS and NIST requirements.", "Built Cash App's first ReBAC platform for teen sponsorship and parental controls.", "Led quarterly planning for the Identity organization."] },
     { k: "fin", org: "Cash App", team: "Financial Platform", y: "2023 – 2025", span: 2, c: "#008a34", where: "Remote", demos: [], reads: [["Breaking up a financial monolith", "writing/monolith.html"]],
-      b: ["Drove decomposition of the financial monolith into microservices, improving developer velocity by 30%.", "Defined the multi-year infrastructure modernization strategy.", "Championed reliability practices that reduced incidents across core payment services.", "Developed future tech leads across teams."] },
+      b: ["Helped move financial platform functionality out of the monolith into services teams could own, improving developer velocity by 30%.", "Worked out a multi-year plan for modernizing the infrastructure.", "Put reliability practices in place that reduced incidents across core payment services.", "Mentored engineers who went on to lead technical work across teams."] },
     { k: "core", org: "Cash App", team: "Core Experiences", y: "2025 – now", span: 1.6, c: "#006e29", where: "Remote", demos: [], reads: [["Scoped sessions case study", "writing/scoped-sessions.html"]],
-      b: ["Led migration of 30%+ of web traffic to a new stack, reducing downtime by 25%.", "Launched secure web login for Afterpay Checkout.", "Implemented Scoped Sessions across Cash APIs.", "Set session-management standards that improved release quality by 20%."] },
+      b: ["Led the move of more than 30% of web traffic to a new stack, with 25% less downtime.", "Worked on secure web login for Afterpay Checkout.", "Rolled out Scoped Sessions across Cash APIs.", "Set session-management standards that improved release quality by 20%."] },
   ];
   $("#tl-bar").innerHTML = T.map(t => `<button class="seg" role="tab" data-k="${t.k}" style="flex:${t.span};background:${t.c}">${t.org}<small>${t.team}</small></button>`).join("");
   function tl(k) {
