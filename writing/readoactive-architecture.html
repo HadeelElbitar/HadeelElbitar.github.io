@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How Readoactive is built · Hadeel Elbitar</title>
-<meta name="description" content="The architecture behind Readoactive, my AI book tracker: from a shared video to books on your shelf, one contract behind every API and MCP tool, and how one person ships it safely every day.">
+<meta name="description" content="How I built and run Readoactive: one server, a shared API and MCP contract, careful model spending, and deployment checks for a one-person project.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="How Readoactive is built">
-<meta property="og:description" content="From a shared video to books on your shelf: one box, one contract, and every model call accounted for.">
+<meta property="og:description" content="I built Readoactive on one server. Here's how the APIs, AI tools, book extraction, auth, and deployments fit together.">
 <meta property="og:url" content="https://hadeelelbitar.com/writing/readoactive-architecture.html">
 <meta property="og:image" content="https://hadeelelbitar.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hadeel Elbitar, Senior Staff Software Engineer. I build the moment you sign in, and everything it unlocks.">
+<meta property="og:image:alt" content="Hadeel Elbitar explains the architecture behind Readoactive, the book app she built and runs herself.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,7 +68,7 @@
 <article>
   <p class="kicker">ARCHITECTURE · READOACTIVE · AI PRODUCT</p>
   <h1>How Readoactive is built</h1>
-  <p class="dek">From a shared video to books on your shelf: one box, one contract behind every API and AI tool, and every model call accounted for.</p>
+  <p class="dek">I built a book app that reads BookToks, checks your library, and runs on one server. Here's why I made those decisions, and how I keep it running on my own.</p>
   <div class="byline"><span><b>Hadeel Elbitar</b></span><span>·</span><span>7 min read</span></div>
 
   <div class="stats">
@@ -86,9 +86,9 @@
     library.
   </p>
   <p>
-    I'm the only engineer, so every architectural decision had to pass one test: can one person run this, change it
-    every day and sleep at night? Here's the whole system. Tap any part to see what it does, or follow a single
-    video through it.
+    I'm the only engineer, so I have to be able to understand the whole system, change it, and fix it when it breaks.
+    That ruled out quite a few things I might have reached for on a bigger team. You can explore the architecture
+    below, or follow one video through the system.
   </p>
 
   <div class="fig" id="archfig">
@@ -106,20 +106,20 @@
     <p class="cap">The production system. Everything except the clients, Claude, Whisper and the data sources runs on a single Ubuntu server.</p>
   </div>
 
-  <h2>One box, on purpose</h2>
+  <h2>Why it runs on one server</h2>
   <p>
     The whole thing runs on one server: Caddy in front, the API, a background worker, and Postgres. No Kubernetes,
     no message broker, no Redis. Background jobs are rows in a Postgres table, so a capture that's halfway done
     survives a restart, the API can run as several processes, and there's one less system to keep alive.
   </p>
   <p>
-    That isn't a lack of ambition. It's the same call I'd make for a team: pick the smallest architecture that meets
-    the reliability bar, and make it easy to leave. Nothing is tied to the host. Moving means running the setup
-    script on a new machine, restoring last night's dump and pointing the domain. Backups run nightly, with a second
-    copy kept offsite.
+    I could have split this across more services, but that would mean more things to monitor and more ways for a
+    one-person project to break. I do still want an exit plan. Nothing depends on this particular host: I can
+    run the setup script on a new machine, restore the latest backup, and point the domain there. Backups run
+    nightly, with another copy kept offsite.
   </p>
 
-  <h2>One contract, three front doors</h2>
+  <h2>I didn't want to define the same API twice</h2>
   <p>
     Every action in the product, from "add this book" to "join this club", is declared once in a single contract:
     its inputs and outputs, the OAuth scopes it needs, whether it's safe to retry, whether it runs as a background job,
@@ -128,13 +128,13 @@
     server that Claude and other assistants use.
   </p>
   <p>
-    That's why the AI integration came almost for free, and why it's safe. An assistant signs in through the same
-    OAuth 2.1 server as the app (dynamic client registration and PKCE), gets scoped, revocable tokens, and can't reach
-    anything the contract doesn't allow. Destructive operations, like deleting a list or undoing an import, are
-    deliberately left out of MCP. With fifteen years in identity, I wasn't going to bolt auth on later.
+    That meant I didn't need to build a separate API for AI assistants. They're subject to the same rules as the app.
+    An assistant signs in through the OAuth 2.1 server, gets a scoped, revocable token, and can't call anything
+    the contract doesn't allow. I deliberately exclude destructive actions like deleting a list or undoing an
+    import from MCP. After fifteen years working on identity, I wasn't going to leave auth for later.
   </p>
 
-  <h2>Paying for the model only when it helps</h2>
+  <h2>Getting useful results without paying to analyze every frame</h2>
   <p>
     Model calls are the main running cost, so the capture pipeline is built to look as little as it can. It reads the
     caption while the video downloads, then the transcript. Frames are sampled in a background thread at the same time,
@@ -167,9 +167,9 @@
     stored results instead of paying for the same videos again.
   </p>
 
-  <h2>Shipping every day without a team to catch me</h2>
+  <h2>How I deploy when there's no team reviewing my changes</h2>
   <p>
-    A push to main deploys, but only through a gate that refuses to ship anything it can't vouch for:
+    A push to main deploys automatically, but only after the checks that matter for that change pass:
   </p>
   <ul>
     <li>The full test suite, 1,220 tests, run in parallel.</li>
@@ -185,16 +185,16 @@
     I work with: tests replay stored model results by default, and fresh model calls are capped per day.
   </p>
 
-  <h2>The bigger takeaway</h2>
+  <h2>What I'd do again</h2>
   <ul class="takeaways">
-    <li><strong>Declare things once.</strong> One contract gave me the API, the AI tools and authorization rules that can't drift apart.</li>
-    <li><strong>Make the expensive path the exception.</strong> The cheapest signal runs first, and each costlier step has to earn its place.</li>
-    <li><strong>Never pay twice for the same answer.</strong> Keep what you've already bought, and design so you can replay it.</li>
-    <li><strong>Let the gate say no.</strong> When nobody is reviewing your pull requests, the deploy pipeline has to be the reviewer.</li>
+    <li><strong>Define the rules in one place.</strong> The HTTP API, MCP tools, and permission checks all come from the same contract.</li>
+    <li><strong>Try the cheap options first.</strong> If the caption already names every book, there's no reason to pay for vision too.</li>
+    <li><strong>Keep the results.</strong> I save transcripts and model responses so I can improve extraction without paying to process the same video again.</li>
+    <li><strong>Make the tests hard to ignore.</strong> I'm the only engineer. The deployment checks have to catch the mistakes a reviewer might have spotted.</li>
   </ul>
   <p>
-    None of this is specific to books. It's how I'd want any platform to work: small enough to understand,
-    strict about access, careful with money, and safe to change on a Friday.
+    This is a book app, but the decisions are the same ones I think about at work: who can call what, what happens
+    when a dependency fails, what it costs to run, and whether another change will break something unexpectedly.
   </p>
 
   <div class="next">
