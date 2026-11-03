@@ -4,15 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A checkout login shouldn't be able to send money · Hadeel Elbitar</title>
-<meta name="description" content="Why being logged in shouldn't mean having access to everything: applying least privilege to first-party sessions, and what it took to make hundreds of endpoints respect it.">
+<meta name="description" content="Why I worked on scoped sessions at Cash App: a checkout login should approve a purchase, not give a browser permission to do everything in your account.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="A checkout login shouldn't be able to send money">
-<meta property="og:description" content="Why being logged in shouldn't mean having access to everything: applying least privilege to first-party sessions, and what it took to make hundreds of endpoints respect it.">
+<meta property="og:description" content="A checkout login should approve a purchase, not give a browser permission to send money. How we approached scoped sessions and the hundreds of APIs involved.">
 <meta property="og:url" content="https://hadeelelbitar.com/writing/scoped-sessions.html">
 <meta property="og:image" content="https://hadeelelbitar.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Hadeel Elbitar, Senior Staff Software Engineer. I build the moment you sign in, and everything it unlocks.">
+<meta property="og:image:alt" content="Hadeel Elbitar writes about identity, authorization, and the engineering behind secure checkout sessions.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f6b5c'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' fill='white' text-anchor='middle'%3EHE%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,7 @@
 <article>
   <p class="kicker">CASE STUDY · IDENTITY · SESSIONS</p>
   <h1>A checkout login shouldn't be able to send money</h1>
-  <p class="dek">Why we had to rethink what being logged in actually means.</p>
+  <p class="dek">We needed a way to let someone approve a checkout without handing that browser session access to their entire account.</p>
   <div class="byline"><span><b>Hadeel Elbitar</b></span><span>·</span><span>8 min read</span></div>
 
   <p>
@@ -47,9 +47,9 @@
     One that could send money, manage bank accounts, change security settings, or reach pretty much anything else your
     account supports. That's a lot of power to hand to a browser session that only needed to approve a checkout.
   </p>
-  <p>That's the problem we set out to solve.</p>
+  <p>That was the problem. We needed checkout to work, without treating every browser session like a trusted, fully signed-in phone.</p>
 
-  <h2>Being authenticated shouldn't mean having access to everything</h2>
+  <h2>Logging in is not the same as getting access to everything</h2>
   <p>The way I think about it, authentication and authorization answer two very different questions.</p>
   <div class="pair">
     <div><span>Authentication</span>Who are you?</div>
@@ -75,9 +75,9 @@
   <blockquote>A checkout session should be able to complete checkout. Not send money to a stranger. Not link a new bank account. Not buy crypto.</blockquote>
   <p>A reasonable expectation, but not one traditional first-party sessions enforce.</p>
 
-  <h2>Enter Scoped Sessions</h2>
+  <h2>What we changed: Scoped Sessions</h2>
   <p>
-    The idea was straightforward: instead of giving every login full access, give each session only the permissions it
+    The idea itself wasn't complicated: instead of giving every login full access, give each session only the permissions it
     actually needs. We called this Scoped Sessions.
   </p>
   <p>
@@ -226,7 +226,7 @@
     this? Someone has to understand the implications well enough to answer it.
   </p>
 
-  <h2>What I'd do the same way again</h2>
+  <h2>What I'd keep if we were doing it again</h2>
   <ul class="takeaways">
     <li><strong>Treat first-party applications as untrusted contexts too.</strong> Being first-party doesn't mean every session deserves full access. The context a session was created in matters as much as who wrote the client.</li>
     <li><strong>Use predefined permission tiers when the use cases are known.</strong> Letting clients assemble arbitrary scope lists is flexible, but flexibility isn't always helpful in security-sensitive systems. Fixed tiers are easier to understand, review and audit.</li>
@@ -235,7 +235,7 @@
     <li><strong>Don't pretend you have step-up authentication if you don't.</strong> It would be nice to let someone elevate a scoped session after an extra verification step. But unless you've actually designed and secured that mechanism, a fresh full login is simpler and safer. Not the smoothest experience, admittedly, but one with much clearer security boundaries.</li>
   </ul>
 
-  <h2>The bigger takeaway</h2>
+  <h2>What made this hard</h2>
   <p>
     What I find interesting about this project is that the core idea was almost boring. Apply least privilege to
     sessions. Give each login only the permissions it needs. That's a principle we've been talking about forever.
@@ -246,9 +246,9 @@
     secure default would sometimes break legitimate experiences.
   </p>
   <p>
-    I think that's the part that gets overlooked in a lot of engineering discussions. Coming up with a better model is
-    often the easy part. Getting an entire existing system to consistently respect it, without creating new security
-    problems along the way, is where the actual engineering happens.
+    That's the part I don't think gets enough attention. Designing a permission model is relatively straightforward.
+    Getting hundreds of existing APIs to respect it, without breaking legitimate flows or accidentally opening up
+    new permissions, is the work that takes time.
   </p>
   <blockquote>A login should prove who you are. It shouldn't automatically hand you the keys to everything.</blockquote>
 
